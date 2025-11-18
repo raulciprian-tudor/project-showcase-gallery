@@ -46,5 +46,85 @@
     "developer": "Alex Kumar",
     "techStack": "Angular",
     "status": "completed"
+  },
+  {
+    "id": "proj-007",
+    "name": "Booking Management System",
+    "createdDate": "2024-04-12T00:00:00.000Z",
+    "developer": "Elena Rodriguez",
+    "techStack": "Angular",
+    "status": "active"
+  },
+  {
+    "id": "proj-008",
+    "name": "Social Media Dashboard",
+    "createdDate": "2024-07-03T00:00:00.000Z",
+    "developer": "James Mitchell",
+    "techStack": "React",
+    "status": "active"
+  },
+  {
+    "id": "proj-009",
+    "name": "Expense Tracker",
+    "createdDate": "2023-12-18T00:00:00.000Z",
+    "developer": "Sarah Chen",
+    "techStack": "Vue",
+    "status": "completed"
+  },
+  {
+    "id": "proj-010",
+    "name": "Weather Forecast App",
+    "createdDate": "2024-05-27T00:00:00.000Z",
+    "developer": "Marco Rossi",
+    "techStack": "React",
+    "status": "active"
+  },
+  {
+    "id": "proj-011",
+    "name": "Fitness Tracking Platform",
+    "createdDate": "2024-09-14T00:00:00.000Z",
+    "developer": "Elena Rodriguez",
+    "techStack": "Angular",
+    "status": "active"
+  },
+  {
+    "id": "proj-012",
+    "name": "Recipe Management App",
+    "createdDate": "2024-03-08T00:00:00.000Z",
+    "developer": "Alex Kumar",
+    "techStack": "Vue",
+    "status": "completed"
+  },
+  {
+    "id": "proj-013",
+    "name": "Project Timeline Tool",
+    "createdDate": "2023-10-25T00:00:00.000Z",
+    "developer": "James Mitchell",
+    "techStack": "Angular",
+    "status": "archived"
+  },
+  {
+    "id": "proj-014",
+    "name": "Video Streaming Platform",
+    "createdDate": "2024-06-30T00:00:00.000Z",
+    "developer": "Sarah Chen",
+    "techStack": "React",
+    "status": "active"
+  },
+  {
+    "id": "proj-015",
+    "name": "Job Board Application",
+    "createdDate": "2024-02-28T00:00:00.000Z",
+    "developer": "Elena Rodriguez",
+    "techStack": "Vue",
+    "status": "completed"
+  },
+  {
+    "id": "proj-016",
+    "name": "Learning Management System",
+    "createdDate": "2024-08-05T00:00:00.000Z",
+    "developer": "James Mitchell",
+    "techStack": "Angular",
+    "status": "active"
   }
 ]

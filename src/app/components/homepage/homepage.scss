@@ -1,0 +1,23 @@
+@import '../../../styles.scss';
+
+.projects-container {
+  min-height: 100vh;
+  background-color: $dark-bg-primary;
+}
+
+h1 {
+  font-family: $font-family-heading;
+  font-size: $font-size-xxxl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+  color: $dark-text-primary;
+  text-align: center;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+mat-grid-list {
+  margin: 0 auto;
+  max-width: 1400px;
+}
