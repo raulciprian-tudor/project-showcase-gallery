@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { ProjectService } from '../services/project.service';
+import { ProjectInterface } from '../interface/project.interface';
 
 export const projectGuard: CanActivateFn = (route, state) => {
   const projectService = inject(ProjectService);
@@ -13,7 +14,7 @@ export const projectGuard: CanActivateFn = (route, state) => {
   }
 
   return projectService.getProjectById(projectId).pipe(
-    map((project) => {
+    map((project: ProjectInterface | undefined) => {
       if (project) {
         return true;
       } else {

@@ -1,14 +1,16 @@
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 body {
@@ -21,55 +23,61 @@ body {
   margin: 0;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 /** ---------------------------------------------------------------------- */
 
 /** Color Palette Base Colors */
-$palette-darkest: #0D1B2A;
-$palette-dark: #1B263B;
-$palette-medium: #415A77;
-$palette-light: #778DA9;
-$palette-lightest: #E0E1DD;
+$palette-darkest: #0d1b2a;
+$palette-dark: #1b263b;
+$palette-medium: #415a77;
+$palette-light: #778da9;
+$palette-lightest: #e0e1dd;
 
 /** ---------------------------------------------------------------------- */
 
 /** Dark Mode Theme Variables */
 
 // Backgrounds
-$dark-bg-primary: $palette-darkest;        // Main app background
-$dark-bg-secondary: $palette-dark;         // Cards, panels, elevated surfaces
-$dark-bg-tertiary: $palette-medium;        // Hover states, active elements
+$dark-bg-primary: $palette-darkest; // Main app background
+$dark-bg-secondary: $palette-dark; // Cards, panels, elevated surfaces
+$dark-bg-tertiary: $palette-medium; // Hover states, active elements
 
 // Foreground & Text
-$dark-text-primary: $palette-lightest;     // Primary text, headings
-$dark-text-secondary: $palette-light;      // Secondary text, descriptions
-$dark-text-muted: $palette-light;          // Disabled text, placeholders, timestamps
+$dark-text-primary: $palette-lightest; // Primary text, headings
+$dark-text-secondary: $palette-light; // Secondary text, descriptions
+$dark-text-muted: $palette-light; // Disabled text, placeholders, timestamps
 
 // Accents & Interactive
-$dark-accent-primary: $palette-light;      // Primary buttons, links, CTAs
-$dark-accent-secondary: $palette-medium;   // Secondary buttons, tags
-$dark-border: $palette-medium;             // Borders, dividers, outlines
+$dark-accent-primary: $palette-light; // Primary buttons, links, CTAs
+$dark-accent-secondary: $palette-medium; // Secondary buttons, tags
+$dark-border: $palette-medium; // Borders, dividers, outlines
 
 /** ---------------------------------------------------------------------- */
 
 /** Light Mode Theme Variables */
 
 // Backgrounds
-$light-bg-primary: $palette-lightest;      // Main app background
-$light-bg-secondary: $palette-light;       // Cards, panels, elevated surfaces
-$light-bg-tertiary: $palette-medium;       // Hover states, active elements
+$light-bg-primary: $palette-lightest; // Main app background
+$light-bg-secondary: $palette-light; // Cards, panels, elevated surfaces
+$light-bg-tertiary: $palette-medium; // Hover states, active elements
 
 // Foreground & Text
-$light-text-primary: $palette-darkest;     // Primary text, headings
-$light-text-secondary: $palette-dark;      // Secondary text, descriptions
-$light-text-muted: $palette-medium;        // Disabled text, placeholders, timestamps
+$light-text-primary: $palette-darkest; // Primary text, headings
+$light-text-secondary: $palette-dark; // Secondary text, descriptions
+$light-text-muted: $palette-medium; // Disabled text, placeholders, timestamps
 
 // Accents & Interactive
-$light-accent-primary: $palette-medium;    // Primary buttons, links, CTAs
-$light-accent-secondary: $palette-dark;    // Secondary buttons, tags
-$light-border: $palette-medium;            // Borders, dividers, outlines
+$light-accent-primary: $palette-medium; // Primary buttons, links, CTAs
+$light-accent-secondary: $palette-dark; // Secondary buttons, tags
+$light-border: $palette-medium; // Borders, dividers, outlines
 
 /** ---------------------------------------------------------------------- */
 
@@ -79,52 +87,53 @@ $light-border: $palette-medium;            // Borders, dividers, outlines
 $spacing-unit: 8px;
 
 // Micro spacing
-$spacing-xxs: calc($spacing-unit * 0.5);   // 4px - Tight spacing, icon gaps
-$spacing-xs: $spacing-unit;                // 8px - Small gaps, compact layouts
+$spacing-xxs: calc($spacing-unit * 0.5); // 4px - Tight spacing, icon gaps
+$spacing-xs: $spacing-unit; // 8px - Small gaps, compact layouts
 
 // Standard spacing
-$spacing-sm: calc($spacing-unit * 1.5);    // 12px - Form field gaps, small padding
-$spacing-md: calc($spacing-unit * 2);      // 16px - Default spacing, card padding
-$spacing-lg: calc($spacing-unit * 3);      // 24px - Section spacing, large padding
+$spacing-sm: calc($spacing-unit * 1.5); // 12px - Form field gaps, small padding
+$spacing-md: calc($spacing-unit * 2); // 16px - Default spacing, card padding
+$spacing-lg: calc($spacing-unit * 3); // 24px - Section spacing, large padding
 
 // Macro spacing
-$spacing-xl: calc($spacing-unit * 4);      // 32px - Component separation, margins
-$spacing-xxl: calc($spacing-unit * 6);     // 48px - Section headers, page spacing
-$spacing-xxxl: calc($spacing-unit * 8);    // 64px - Hero sections, major separations
+$spacing-xl: calc($spacing-unit * 4); // 32px - Component separation, margins
+$spacing-xxl: calc($spacing-unit * 6); // 48px - Section headers, page spacing
+$spacing-xxxl: calc($spacing-unit * 8); // 64px - Hero sections, major separations
 
 /** ---------------------------------------------------------------------- */
 
 /** Typography Variables */
 
 // Font families
-$font-family-primary: 'Roboto', 'Helvetica Neue', Arial, sans-serif;  // Body text, UI elements
-$font-family-heading: 'Roboto', 'Helvetica Neue', Arial, sans-serif;  // Headings, titles
-$font-family-mono: 'Roboto Mono', 'Courier New', monospace;           // Code, technical content
+$font-family-primary: 'Roboto', 'Helvetica Neue', Arial, sans-serif; // Body text, UI elements
+$font-family-heading: 'Roboto', 'Helvetica Neue', Arial, sans-serif; // Headings, titles
+$font-family-mono: 'Roboto Mono', 'Courier New', monospace; // Code, technical content
 
 // Font weights
-$font-weight-light: 300;       // Light text, subtle emphasis
-$font-weight-regular: 400;     // Body text, normal content
-$font-weight-medium: 500;      // Subheadings, medium emphasis
-$font-weight-semibold: 600;    // Strong emphasis, important UI text
-$font-weight-bold: 700;        // Headings, high emphasis
+$font-weight-light: 300; // Light text, subtle emphasis
+$font-weight-regular: 400; // Body text, normal content
+$font-weight-medium: 500; // Subheadings, medium emphasis
+$font-weight-semibold: 600; // Strong emphasis, important UI text
+$font-weight-bold: 700; // Headings, high emphasis
 
 // Font sizes
-$font-size-xs: 0.75rem;        // 12px - Captions, labels, small text
-$font-size-sm: 0.875rem;       // 14px - Secondary text, descriptions
-$font-size-base: 1rem;         // 16px - Body text, default size
-$font-size-md: 1.125rem;       // 18px - Emphasized body, large text
-$font-size-lg: 1.25rem;        // 20px - Subheadings, section titles
-$font-size-xl: 1.5rem;         // 24px - H3, card titles
-$font-size-xxl: 2rem;          // 32px - H2, feature headings
-$font-size-xxxl: 2.5rem;       // 40px - H1, page titles
-$font-size-display: 3rem;      // 48px - Hero text, display headings
+$font-size-xs: 0.75rem; // 12px - Captions, labels, small text
+$font-size-sm: 0.875rem; // 14px - Secondary text, descriptions
+$font-size-base: 1rem; // 16px - Body text, default size
+$font-size-md: 1.125rem; // 18px - Emphasized body, large text
+$font-size-lg: 1.25rem; // 20px - Subheadings, section titles
+$font-size-xl: 1.5rem; // 24px - H3, card titles
+$font-size-xxl: 2rem; // 32px - H2, feature headings
+$font-size-xxxl: 2.5rem; // 40px - H1, page titles
+$font-size-display: 3rem; // 48px - Hero text, display headings
 
 // Line heights
-$line-height-tight: 1.2;       // Headings, compact text
-$line-height-normal: 1.5;      // Body text, default line height
-$line-height-relaxed: 1.75;    // Comfortable reading, long content
+$line-height-tight: 1.2; // Headings, compact text
+$line-height-normal: 1.5; // Body text, default line height
+$line-height-relaxed: 1.75; // Comfortable reading, long content
 
 // Letter spacing
-$letter-spacing-tight: -0.02em;   // Large headings, display text
-$letter-spacing-normal: 0;        // Body text, default
-$letter-spacing-wide: 0.05em;     // Uppercase text, labels, buttons
+$letter-spacing-tight: -0.02em; // Large headings, display text
+$letter-spacing-normal: 0; // Body text, default
+$letter-spacing-wide: 0.05em; // Uppercase text, labels, buttons
+
