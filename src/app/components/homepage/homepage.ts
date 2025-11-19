@@ -7,12 +7,13 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { Filter } from '../filter/filter';
 
 
 @Component({
   selector: 'app-homepage',
-  imports: [ProjectCard, MatGridListModule, AsyncPipe, MatButtonToggleModule, MatIconModule],
+  imports: [ProjectCard, MatGridListModule, AsyncPipe, MatButtonToggleModule, MatIconModule, Filter],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss',
 })

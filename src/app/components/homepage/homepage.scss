@@ -18,11 +18,17 @@ h1 {
   text-transform: uppercase;
 }
 
-.view-controls {
+.toolbar-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin: 0 auto $spacing-lg auto;
   max-width: 1400px;
+  width: 100%;
+}
+
+.view-controls {
+  display: flex;
 
   mat-button-toggle-group {
     background-color: $dark-bg-secondary;

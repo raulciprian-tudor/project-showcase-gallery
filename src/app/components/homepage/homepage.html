@@ -1,14 +1,18 @@
 <div class="projects-container">
   <h1 style="text-align: center; padding: 1em">Project Gallery</h1>
-  <div class="view-controls">
-    <mat-button-toggle-group [(value)]="viewMode">
-      <mat-button-toggle value="grid">
-        <mat-icon>grid_view</mat-icon>
-      </mat-button-toggle>
-      <mat-button-toggle value="list">
-        <mat-icon>view_list</mat-icon>
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+  <div class="toolbar-container">
+    <app-filter></app-filter>
+
+    <div class="view-controls">
+      <mat-button-toggle-group [(value)]="viewMode">
+        <mat-button-toggle value="grid">
+          <mat-icon>grid_view</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="list">
+          <mat-icon>view_list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </div>
   <!-- Grid View -->
   @if (viewMode === 'grid') {
