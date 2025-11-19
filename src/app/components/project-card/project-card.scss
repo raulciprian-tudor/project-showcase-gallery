@@ -13,10 +13,18 @@ mat-card {
   flex-direction: column;
   box-sizing: border-box;
   padding: $spacing-lg;
-  border-radius: 0;
+  // border-radius: 0;
   background-color: $dark-bg-secondary;
   border: 1px solid $dark-border;
   color: $dark-text-primary;
+
+  /** ANIMATION */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  }
 }
 
 mat-card-header {
@@ -43,22 +51,14 @@ mat-card-subtitle {
 mat-card-content {
   flex: 1;
   overflow: auto;
-  padding: $spacing-md 0;
+  padding-left: 1em !important;
+  padding-right: 1em !important;
 
-  p {
-    font-size: $font-size-base;
+  .description {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
     line-height: $line-height-normal;
     color: $dark-text-secondary;
-    margin-bottom: $spacing-sm;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    strong {
-      font-weight: $font-weight-semibold;
-      color: $dark-text-primary;
-    }
   }
 }
 

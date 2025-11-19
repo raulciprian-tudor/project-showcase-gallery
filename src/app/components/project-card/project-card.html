@@ -4,9 +4,7 @@
     <mat-card-subtitle>{{ project.techStack }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <p><strong>Developer:</strong> {{ project.developer }}</p>
-    <p><strong>Created:</strong> {{ project.createdDate | date : 'shortDate' }}</p>
-    <p><strong>Status:</strong> {{ project.status }}</p>
+    <p>{{ project.description }}</p>
   </mat-card-content>
   <mat-card-actions>
     <button matButton>See more</button>

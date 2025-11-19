@@ -2,129 +2,97 @@
   {
     "id": "proj-001",
     "name": "E-commerce Dashboard",
-    "createdDate": "2024-03-15T00:00:00.000Z",
-    "developer": "Sarah Chen",
-    "techStack": "Angular",
-    "status": "active"
+    "description": "Comprehensive analytics and management dashboard for online retail operations with real-time sales tracking and inventory monitoring",
+    "techStack": "Angular"
   },
   {
     "id": "proj-002",
     "name": "Task Management App",
-    "createdDate": "2024-01-22T00:00:00.000Z",
-    "developer": "Marco Rossi",
-    "techStack": "React",
-    "status": "completed"
+    "description": "Collaborative task organization tool with team assignment features, deadline tracking, and progress visualization",
+    "techStack": "React"
   },
   {
     "id": "proj-003",
     "name": "Real-time Chat Platform",
-    "createdDate": "2024-06-08T00:00:00.000Z",
-    "developer": "Sarah Chen",
-    "techStack": "Vue",
-    "status": "active"
+    "description": "WebSocket-based messaging application with group conversations, file sharing, and typing indicators",
+    "techStack": "Vue"
   },
   {
     "id": "proj-004",
     "name": "Analytics Dashboard",
-    "createdDate": "2023-11-30T00:00:00.000Z",
-    "developer": "Alex Kumar",
-    "techStack": "Angular",
-    "status": "archived"
+    "description": "Business intelligence platform for data visualization, KPI tracking, and custom report generation",
+    "techStack": "Angular"
   },
   {
     "id": "proj-005",
     "name": "Inventory Tracker",
-    "createdDate": "2024-08-19T00:00:00.000Z",
-    "developer": "Marco Rossi",
-    "techStack": "React",
-    "status": "active"
+    "description": "Stock management system with low-stock alerts, supplier integration, and barcode scanning capabilities",
+    "techStack": "React"
   },
   {
     "id": "proj-006",
     "name": "Customer Portal",
-    "createdDate": "2024-02-10T00:00:00.000Z",
-    "developer": "Alex Kumar",
-    "techStack": "Angular",
-    "status": "completed"
+    "description": "Self-service platform for customers to manage accounts, track orders, and access support resources",
+    "techStack": "Angular"
   },
   {
     "id": "proj-007",
     "name": "Booking Management System",
-    "createdDate": "2024-04-12T00:00:00.000Z",
-    "developer": "Elena Rodriguez",
-    "techStack": "Angular",
-    "status": "active"
+    "description": "Reservation platform with calendar integration, automated confirmations, and payment processing",
+    "techStack": "Angular"
   },
   {
     "id": "proj-008",
     "name": "Social Media Dashboard",
-    "createdDate": "2024-07-03T00:00:00.000Z",
-    "developer": "James Mitchell",
-    "techStack": "React",
-    "status": "active"
+    "description": "Multi-platform social media management tool with post scheduling, analytics, and engagement tracking",
+    "techStack": "React"
   },
   {
     "id": "proj-009",
     "name": "Expense Tracker",
-    "createdDate": "2023-12-18T00:00:00.000Z",
-    "developer": "Sarah Chen",
-    "techStack": "Vue",
-    "status": "completed"
+    "description": "Personal finance application for budget management, expense categorization, and spending insights",
+    "techStack": "Vue"
   },
   {
     "id": "proj-010",
     "name": "Weather Forecast App",
-    "createdDate": "2024-05-27T00:00:00.000Z",
-    "developer": "Marco Rossi",
-    "techStack": "React",
-    "status": "active"
+    "description": "Location-based weather service with hourly forecasts, severe weather alerts, and interactive radar maps",
+    "techStack": "React"
   },
   {
     "id": "proj-011",
     "name": "Fitness Tracking Platform",
-    "createdDate": "2024-09-14T00:00:00.000Z",
-    "developer": "Elena Rodriguez",
-    "techStack": "Angular",
-    "status": "active"
+    "description": "Workout logging and progress tracking application with exercise library, goal setting, and nutrition monitoring",
+    "techStack": "Angular"
   },
   {
     "id": "proj-012",
     "name": "Recipe Management App",
-    "createdDate": "2024-03-08T00:00:00.000Z",
-    "developer": "Alex Kumar",
-    "techStack": "Vue",
-    "status": "completed"
+    "description": "Digital cookbook with meal planning features, shopping list generation, and nutritional information",
+    "techStack": "Vue"
   },
   {
     "id": "proj-013",
     "name": "Project Timeline Tool",
-    "createdDate": "2023-10-25T00:00:00.000Z",
-    "developer": "James Mitchell",
-    "techStack": "Angular",
-    "status": "archived"
+    "description": "Gantt chart-based project planning application with milestone tracking and resource allocation features",
+    "techStack": "Angular"
   },
   {
     "id": "proj-014",
     "name": "Video Streaming Platform",
-    "createdDate": "2024-06-30T00:00:00.000Z",
-    "developer": "Sarah Chen",
-    "techStack": "React",
-    "status": "active"
+    "description": "On-demand video service with adaptive streaming, playlist creation, and recommendation engine",
+    "techStack": "React"
   },
   {
     "id": "proj-015",
     "name": "Job Board Application",
-    "createdDate": "2024-02-28T00:00:00.000Z",
-    "developer": "Elena Rodriguez",
-    "techStack": "Vue",
-    "status": "completed"
+    "description": "Employment marketplace connecting job seekers with employers, featuring application tracking and resume management",
+    "techStack": "Vue"
   },
   {
     "id": "proj-016",
     "name": "Learning Management System",
-    "createdDate": "2024-08-05T00:00:00.000Z",
-    "developer": "James Mitchell",
-    "techStack": "Angular",
-    "status": "active"
+    "description": "Educational platform with course creation, student progress tracking, quizzes, and certification management",
+    "techStack": "Angular"
   }
 ]

@@ -3,6 +3,7 @@
 .projects-container {
   min-height: 100vh;
   background-color: $dark-bg-primary;
+  padding: $spacing-xl $spacing-md;
 }
 
 h1 {
@@ -13,11 +14,90 @@ h1 {
   letter-spacing: $letter-spacing-tight;
   color: $dark-text-primary;
   text-align: center;
-  margin: 0;
+  margin: 0 0 $spacing-xl 0;
   text-transform: uppercase;
 }
 
+.view-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 auto $spacing-lg auto;
+  max-width: 1400px;
+
+  mat-button-toggle-group {
+    background-color: $dark-bg-secondary;
+    border: 1px solid $dark-border;
+    border-radius: 4px;
+  }
+
+  mat-button-toggle {
+    color: $dark-text-secondary;
+
+    &.mat-button-toggle-checked {
+      background-color: $dark-bg-tertiary;
+      color: $dark-accent-primary;
+    }
+
+    mat-icon {
+      font-size: $font-size-lg;
+      width: $font-size-lg;
+      height: $font-size-lg;
+    }
+  }
+}
+
+// Grid View
 mat-grid-list {
   margin: 0 auto;
   max-width: 1400px;
+  padding: 0 $spacing-md;
+
+  mat-grid-tile {
+    overflow: visible !important;
+  }
+
+  app-project-card {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+// List View
+.list-view {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 0 $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  app-project-card {
+    width: 100%;
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-container {
+    padding: $spacing-lg $spacing-sm;
+  }
+
+  h1 {
+    font-size: $font-size-xxl;
+    margin-bottom: $spacing-lg;
+  }
+
+  .view-controls {
+    margin-bottom: $spacing-md;
+  }
+
+  mat-grid-list {
+    padding: 0 $spacing-sm;
+  }
+
+  .list-view {
+    padding: 0 $spacing-sm;
+    gap: $spacing-md;
+  }
 }
