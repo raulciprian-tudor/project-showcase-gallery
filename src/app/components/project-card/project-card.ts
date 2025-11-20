@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { GitHubRepo, ProjectInterface } from '../../core/interface/project.interface';
 import { MatChipsModule } from '@angular/material/chips';
+import { GitHubRepo } from '../../core/interface/project.interface';
+
 @Component({
   selector: 'app-project-card',
   imports: [MatCardModule, MatButtonModule, MatChipsModule],
@@ -11,9 +12,11 @@ import { MatChipsModule } from '@angular/material/chips';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectCard {
-  @Input() project!: GitHubRepo;
+  @Input({ required: true }) project!: GitHubRepo;
 
-  getTechStackArray(techStack: string | string[]): string[] {
-    return Array.isArray(techStack) ? techStack : [techStack];
+  get techStack(): string[] {
+    return Array.isArray(this.project.techStack)
+      ? this.project.techStack
+      : [this.project.techStack];
   }
 }

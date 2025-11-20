@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { GitHubRepo, ProjectInterface } from '../interface/project.interface';
+import { GitHubRepo } from '../interface/project.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +27,10 @@ export class ProjectService {
         name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         description: repo.description || 'No description available',
         techStack: repo.topics.length > 0 ? repo.topics : [repo.language],
-        url: repo.html_url,
+        url: repo.url,
         homepage: repo.homepage,
-        stars: repo.stargazers_count
+        stars: repo.stargazers_count,
+        updated_at: repo.updated_at,
       })))
     );
   }

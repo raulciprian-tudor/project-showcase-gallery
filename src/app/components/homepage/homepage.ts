@@ -1,63 +1,62 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { GitHubRepo, ProjectInterface } from '../../core/interface/project.interface';
-import { ProjectService } from '../../core/services/project.service';
+import { ProjectService, } from '../../core/services/project.service';
 import { ProjectCard } from '../project-card/project-card';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
-import { map } from 'rxjs';
+import { map, Subject, takeUntil, startWith, pairwise, distinctUntilChanged } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { Filter } from '../filter/filter';
+import { SearchBar } from '../search-bar/search-bar';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { ProjectStateService } from '../../core/services/project-state.service';
+import { UrlSyncService } from '../../core/services/url-sync.service';
 
 
 @Component({
   selector: 'app-homepage',
-  imports: [ProjectCard, MatGridListModule, AsyncPipe, MatButtonToggleModule, MatIconModule, Filter],
+  imports: [
+    ProjectCard,
+    MatGridListModule,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatFormField,
+    MatSelectModule,
+    Filter,
+    AsyncPipe,
+    SearchBar
+  ],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss',
 })
-export class Homepage implements OnInit {
+export class Homepage implements OnInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
-  viewMode: 'grid' | 'list' = 'grid';
+  private projectService = inject(ProjectService);
+  private projectState = inject(ProjectStateService);
+  private urlSync = inject(UrlSyncService);
+  private destroy$ = new Subject<void>();
+  private isInitialLoad = true;
+  private viewModeSubject = new Subject<'grid' | 'list'>
 
-  projectService = inject(ProjectService);
-  projects: GitHubRepo[] = [];
-  filteredProjects: GitHubRepo[] = [];
-  availableTechs: string[] = [];
+  filteredProjects$ = this.projectState.filteredProjects$;
+  availableTechs$ = this.projectState.availableTechs$;
+  state$ = this.projectState.state$;
 
-  ngOnInit(): void {
-    this.projectService.transformToProjects().subscribe({
-      next: (projects) => {
-        this.projects = projects;
-        this.filteredProjects = projects;
-        this.availableTechs = this.extractUniqueTechs(projects);
-      },
-      error: (error) => {
-        console.error('Error fetching GitHub repos:', error)
-      }
-    })
+  private _viewMode: 'grid' | 'list' = 'grid';
+  get viewMode(): 'grid' | 'list' {
+    return this._viewMode;
   }
 
-  onFilterChange(selectedTechs: string[]) {
-    if (selectedTechs.length === 0) {
-      this.filteredProjects = this.projects;
-    } else {
-      this.filteredProjects = this.projects.filter(project => selectedTechs.some(tech =>
-        project.techStack.some((stack: string) => stack.toLowerCase() === tech.toLowerCase())
-      ))
-    }
+  set viewMode(value: 'grid' | 'list') {
+    this._viewMode = value;
+    this.viewModeSubject.next(value);
   }
 
-  extractUniqueTechs(projects: GitHubRepo[]): string[] {
-    const techSet = new Set<string>();
-    projects.forEach(project => {
-      project.techStack.forEach(tech => {
-        techSet.add(tech)
-      });
-    });
-    return Array.from(techSet).sort();
-  }
+  selectedTechs: string[] = [];
+  searchTerm: string = '';
+  sortOption: string = 'name-asc';
 
   cols$ = this.breakpointObserver.observe([
     Breakpoints.XSmall,
@@ -69,4 +68,69 @@ export class Homepage implements OnInit {
       return 3
     })
   )
+
+  ngOnInit(): void {
+
+    this.viewModeSubject
+      .pipe(
+        startWith(this._viewMode),
+        distinctUntilChanged(),
+        pairwise(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([prev, curr]) => {
+        if (!this.isInitialLoad && prev !== curr) {
+          this.projectState.updateState({ viewMode: curr })
+        }
+      })
+
+    // Sync local state with service state
+    this.state$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this._viewMode = state.viewMode;
+        this.selectedTechs = state.selectedTechs;
+        this.searchTerm = state.searchTerm;
+        this.sortOption = state.sortOption;
+
+        // Sync to URL
+        if (!this.isInitialLoad) {
+          this.urlSync.syncStateToUrl(state);
+        }
+      });
+
+    this.projectService.transformToProjects()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (projects) => {
+          this.projectState.setProjects(projects);
+
+          // Load initial state from URL
+          const urlState = this.urlSync.loadStateFromUrl();
+          this.projectState.setState(urlState);
+
+          setTimeout(() => this.isInitialLoad = false, 0);
+        },
+        error: (error) => {
+          console.error('Error fetching GitHub repos:', error)
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onSearchChange(term: string) {
+    this.projectState.updateState({ searchTerm: term });
+  }
+
+  onFilterChange(selectedTechs: string[]) {
+    this.projectState.updateState({ selectedTechs: selectedTechs });
+  }
+
+  onSortChange() {
+    this.projectState.updateState({ sortOption: this.sortOption });
+  }
 }

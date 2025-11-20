@@ -3,8 +3,25 @@
   <div class="toolbar-container">
     <app-filter
       (filterChange)="onFilterChange($event)"
-      [availableTechs]="availableTechs"
-    ></app-filter>
+      [availableTechs]="(availableTechs$ | async) || []"
+      [initialSelectedTechs]="selectedTechs"
+    />
+
+    <div class="search-sort-group">
+      <app-search-bar (searchChange)="onSearchChange($event)" [initialValue]="searchTerm" />
+
+      <mat-form-field appearance="outline" class="sort-field">
+        <mat-label>Sort by</mat-label>
+        <mat-select [(value)]="sortOption" (selectionChange)="onSortChange()">
+          <mat-option value="name-asc">Name (A-Z)</mat-option>
+          <mat-option value="name-desc">Name (Z-A)</mat-option>
+          <mat-option value="stars-desc">Most Stars</mat-option>
+          <mat-option value="stars-asc">Least Stars</mat-option>
+          <mat-option value="date-desc">Recently Updated</mat-option>
+          <mat-option value="date-asc">Oldest First</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <div class="view-controls">
       <mat-button-toggle-group [(value)]="viewMode">
@@ -17,10 +34,11 @@
       </mat-button-toggle-group>
     </div>
   </div>
+  @if (filteredProjects$ | async; as projects) {
   <!-- Grid View -->
   @if (viewMode === 'grid') {
   <mat-grid-list [cols]="cols$ | async" rowHeight="1:1" gutterSize="10px">
-    @for(project of filteredProjects; track project.id) {
+    @for(project of projects; track project.id) {
     <mat-grid-tile>
       <app-project-card [project]="project"></app-project-card>
     </mat-grid-tile>
@@ -31,9 +49,9 @@
   <!-- List View -->
   @if (viewMode === 'list') {
   <div class="list-view">
-    @for(project of filteredProjects; track project.id) {
+    @for(project of projects; track project.id) {
     <app-project-card [project]="project" class="list-item"></app-project-card>
     }
   </div>
-  }
+  } }
 </div>
