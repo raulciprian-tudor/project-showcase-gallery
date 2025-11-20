@@ -2,30 +2,27 @@ import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges } from
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
-import { GitHubRepo } from '../../core/interface/project.interface';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-filter',
-  imports: [MatToolbarModule, MatChipsModule, FormsModule, MatIconModule],
+  imports: [MatToolbarModule, MatChipsModule, FormsModule],
   templateUrl: './filter.html',
   styleUrl: './filter.scss',
 })
 export class Filter implements OnChanges {
-  @Output() filterChange = new EventEmitter<string[]>();
-  @Input() initialSelectedTechs: string[] = [];
   @Input() availableTechs: string[] = [];
+  @Input() initialSelectedTechs: string[] = [];
+  @Output() filterChange = new EventEmitter<string[]>();
 
-  _selectedTechs: string[] = [];
+  selectedTechs: string[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['initialSelectedTechs']) {
-      this._selectedTechs = [...(changes['initialSelectedTechs'].currentValue || [])];
+    if (changes['initialSelectedTechs'] && changes['initialSelectedTechs'].currentValue) {
+      this.selectedTechs = [...changes['initialSelectedTechs'].currentValue];
     }
   }
 
-  onChipSelectionChange(event: any) {
-    this._selectedTechs = event.value;
-    this.filterChange.emit(this._selectedTechs);
+  onSelectionChange(selectedTechs: string[]): void {
+    this.filterChange.emit(selectedTechs);
   }
 }

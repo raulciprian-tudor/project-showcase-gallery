@@ -6,9 +6,13 @@
     placeholder="Search by project name..."
     type="text"
   />
-  @if(searchControl.value){
-  <button mat-icon-button matSuffix (click)="clearSearch()" aria-label="Clear search">
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (searchControl.value) {
+    <button 
+      mat-icon-button 
+      matSuffix 
+      (click)="clearSearch()" 
+      aria-label="Clear search">
+      <mat-icon>close</mat-icon>
+    </button>
   }
 </mat-form-field>

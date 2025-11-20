@@ -3,15 +3,17 @@
     <mat-card-title>{{ project.name }}</mat-card-title>
     <mat-card-subtitle>
       <mat-chip-set>
-        @for (tech of getTechStackArray(project.techStack); track tech) {
+        @for (tech of techStack; track tech) {
         <mat-chip>{{ tech }}</mat-chip>
         }
       </mat-chip-set>
     </mat-card-subtitle>
   </mat-card-header>
+
   <mat-card-content>
     <p>{{ project.description }}</p>
   </mat-card-content>
+
   <mat-card-actions>
     <button matButton>See more</button>
   </mat-card-actions>
