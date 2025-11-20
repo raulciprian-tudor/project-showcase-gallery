@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +17,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   templateUrl: './search-bar.html',
   styleUrl: './search-bar.scss',
 })
-export class SearchBar {
+export class SearchBar implements OnChanges {
+  @Input() initialValue: string = '';
   @Output() searchChange = new EventEmitter<string>();
 
   searchControl = new FormControl('');
@@ -31,6 +32,12 @@ export class SearchBar {
       .subscribe(value => {
         this.searchChange.emit(value || '')
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialValue'] && changes['initialValue'].currentValue !== undefined) {
+      this.searchControl.setValue(changes['initialValue'].currentValue, { emitEvent: false });
+    }
   }
 
   clearSearch() {

@@ -29,12 +29,51 @@ h1 {
   padding: 0 $spacing-md;
 }
 
+.search-sort-group {
+  display: flex;
+  gap: 0;
+  
+  app-search-bar {
+    flex: 1;
+    
+    ::ng-deep .search-field {
+      margin: 0;
+      
+      .mat-mdc-text-field-wrapper {
+        border-radius: 4px 0 0 4px;
+      }
+      
+      .mdc-notched-outline__trailing {
+        border-right: none !important;
+      }
+    }
+  }
+  
+  .sort-field {
+    width: 180px;
+    margin: 0;
+    
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      border-radius: 0 4px 4px 0;
+    }
+    
+    ::ng-deep .mdc-notched-outline__leading {
+      border-left: none !important;
+      width: 0 !important;
+    }
+  }
+}
+
 @media only screen and (max-width: 1200px) {
   .toolbar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  
+  .search-sort-group {
+    width: 100%;
   }
 }
 
@@ -116,5 +155,36 @@ mat-grid-list {
   .list-view {
     padding: 0 $spacing-sm;
     gap: $spacing-md;
+  }
+}
+
+.sort-field {
+  ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      background-color: $dark-bg-secondary;
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $dark-border !important;
+    }
+
+    .mat-mdc-form-field.mat-focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: $dark-accent-primary !important;
+      }
+    }
+
+    .mdc-floating-label {
+      color: $dark-text-secondary !important;
+    }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-arrow {
+      color: $dark-text-primary !important;
+    }
   }
 }

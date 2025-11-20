@@ -29,7 +29,8 @@ export class ProjectService {
         techStack: repo.topics.length > 0 ? repo.topics : [repo.language],
         url: repo.url,
         homepage: repo.homepage,
-        stars: repo.stargazers_count
+        stars: repo.stargazers_count,
+        updated_at: repo.updated_at,
       })))
     );
   }

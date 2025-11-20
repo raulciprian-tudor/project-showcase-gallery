@@ -1,12 +1,30 @@
 <div class="projects-container">
   <h1 style="text-align: center; padding: 1em">Project Gallery</h1>
   <div class="toolbar-container">
-    <app-filter (filterChange)="onFilterChange($event)" [availableTechs]="availableTechs" />
+    <app-filter
+      (filterChange)="onFilterChange($event)"
+      [availableTechs]="availableTechs"
+      [initialSelectedTechs]="selectedTechs"
+    />
 
-    <app-search-bar (searchChange)="onSearchChange($event)" />
+    <div class="search-sort-group">
+      <app-search-bar (searchChange)="onSearchChange($event)" [initialValue]="searchTerm" />
+
+      <mat-form-field appearance="outline" class="sort-field">
+        <mat-label>Sort by</mat-label>
+        <mat-select [(value)]="sortOption" (selectionChange)="onSortChange()">
+          <mat-option value="name-asc">Name (A-Z)</mat-option>
+          <mat-option value="name-desc">Name (Z-A)</mat-option>
+          <mat-option value="stars-desc">Most Stars</mat-option>
+          <mat-option value="stars-asc">Least Stars</mat-option>
+          <mat-option value="date-desc">Recently Updated</mat-option>
+          <mat-option value="date-asc">Oldest First</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <div class="view-controls">
-      <mat-button-toggle-group [(value)]="viewMode">
+      <mat-button-toggle-group [(value)]="viewMode" (change)="onViewModeChange()">
         <mat-button-toggle value="grid">
           <mat-icon>grid_view</mat-icon>
         </mat-button-toggle>

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
@@ -11,8 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './filter.html',
   styleUrl: './filter.scss',
 })
-export class Filter {
+export class Filter implements OnChanges {
   @Output() filterChange = new EventEmitter<string[]>();
+  @Input() initialSelectedTechs: string[] = [];
   @Input() availableTechs: string[] = [];
   private _selectedTechs: string[] = [];
 
@@ -23,5 +24,11 @@ export class Filter {
   set selectedTechs(value: string[]) {
     this._selectedTechs = value;
     this.filterChange.emit(value);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['initialSelectedTechs'] && changes['initialSelectedTechs'].currentValue) {
+        this._selectedTechs = [...changes['initialSelectedTechs'].currentValue];
+      }
   }
 }
