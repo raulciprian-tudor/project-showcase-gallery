@@ -3,7 +3,7 @@
   <div class="toolbar-container">
     <app-filter
       (filterChange)="onFilterChange($event)"
-      [availableTechs]="availableTechs"
+      [availableTechs]="(availableTechs$ | async) || []"
       [initialSelectedTechs]="selectedTechs"
     />
 
@@ -24,7 +24,7 @@
     </div>
 
     <div class="view-controls">
-      <mat-button-toggle-group [(value)]="viewMode" (change)="onViewModeChange()">
+      <mat-button-toggle-group [(value)]="viewMode">
         <mat-button-toggle value="grid">
           <mat-icon>grid_view</mat-icon>
         </mat-button-toggle>
@@ -34,10 +34,11 @@
       </mat-button-toggle-group>
     </div>
   </div>
+  @if (filteredProjects$ | async; as projects) {
   <!-- Grid View -->
   @if (viewMode === 'grid') {
   <mat-grid-list [cols]="cols$ | async" rowHeight="1:1" gutterSize="10px">
-    @for(project of filteredProjects; track project.id) {
+    @for(project of projects; track project.id) {
     <mat-grid-tile>
       <app-project-card [project]="project"></app-project-card>
     </mat-grid-tile>
@@ -48,9 +49,9 @@
   <!-- List View -->
   @if (viewMode === 'list') {
   <div class="list-view">
-    @for(project of filteredProjects; track project.id) {
+    @for(project of projects; track project.id) {
     <app-project-card [project]="project" class="list-item"></app-project-card>
     }
   </div>
-  }
+  } }
 </div>

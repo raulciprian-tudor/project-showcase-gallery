@@ -41,6 +41,6 @@ export class SearchBar implements OnChanges {
   }
 
   clearSearch() {
-    this.searchControl.setValue('');
+    this.searchControl.setValue('', { emitEvent: true });
   }
 }

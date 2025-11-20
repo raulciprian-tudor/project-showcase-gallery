@@ -15,20 +15,17 @@ export class Filter implements OnChanges {
   @Output() filterChange = new EventEmitter<string[]>();
   @Input() initialSelectedTechs: string[] = [];
   @Input() availableTechs: string[] = [];
-  private _selectedTechs: string[] = [];
 
-  get selectedTechs(): string[] {
-    return this._selectedTechs;
-  }
-
-  set selectedTechs(value: string[]) {
-    this._selectedTechs = value;
-    this.filterChange.emit(value);
-  }
+  _selectedTechs: string[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-      if (changes['initialSelectedTechs'] && changes['initialSelectedTechs'].currentValue) {
-        this._selectedTechs = [...changes['initialSelectedTechs'].currentValue];
-      }
+    if (changes['initialSelectedTechs']) {
+      this._selectedTechs = [...(changes['initialSelectedTechs'].currentValue || [])];
+    }
+  }
+
+  onChipSelectionChange(event: any) {
+    this._selectedTechs = event.value;
+    this.filterChange.emit(this._selectedTechs);
   }
 }

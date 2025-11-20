@@ -1,10 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { GitHubRepo } from '../../core/interface/project.interface';
-import { ProjectService } from '../../core/services/project.service';
+import { ProjectService, } from '../../core/services/project.service';
 import { ProjectCard } from '../project-card/project-card';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
-import { map } from 'rxjs';
+import { map, Subject, takeUntil, startWith, pairwise, distinctUntilChanged } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +11,8 @@ import { Filter } from '../filter/filter';
 import { SearchBar } from '../search-bar/search-bar';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ProjectStateService } from '../../core/services/project-state.service';
+import { UrlSyncService } from '../../core/services/url-sync.service';
 
 
 @Component({
@@ -31,176 +31,32 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss',
 })
-export class Homepage implements OnInit {
+export class Homepage implements OnInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router)
+  private projectService = inject(ProjectService);
+  private projectState = inject(ProjectStateService);
+  private urlSync = inject(UrlSyncService);
+  private destroy$ = new Subject<void>();
+  private isInitialLoad = true;
+  private viewModeSubject = new Subject<'grid' | 'list'>
 
-  viewMode: 'grid' | 'list' = 'grid';
-  projectService = inject(ProjectService);
-  projects: GitHubRepo[] = [];
-  filteredProjects: GitHubRepo[] = [];
-  availableTechs: string[] = [];
+  filteredProjects$ = this.projectState.filteredProjects$;
+  availableTechs$ = this.projectState.availableTechs$;
+  state$ = this.projectState.state$;
+
+  private _viewMode: 'grid' | 'list' = 'grid';
+  get viewMode(): 'grid' | 'list' {
+    return this._viewMode;
+  }
+
+  set viewMode(value: 'grid' | 'list') {
+    this._viewMode = value;
+    this.viewModeSubject.next(value);
+  }
+
   selectedTechs: string[] = [];
   searchTerm: string = '';
   sortOption: string = 'name-asc';
-
-  ngOnInit(): void {
-    this.projectService.transformToProjects().subscribe({
-      next: (projects) => {
-        this.projects = projects;
-        this.filteredProjects = projects;
-        this.availableTechs = this.extractUniqueTechs(projects);
-
-        // Load state from url params
-        this.loadStateFromUrl();
-
-        // Apply filters after loading state
-        this.applyFilters();
-      },
-      error: (error) => {
-        console.error('Error fetching GitHub repos:', error)
-      }
-    })
-  }
-
-  private loadStateFromUrl() {
-    this.route.queryParams.subscribe(params => {
-      // Load search term
-      this.searchTerm = params['search'] || '';
-
-      // Load selected techs
-      if (params['techs']) {
-        this.selectedTechs = params['techs'].split(',');
-      }
-
-      // Load sort options
-      this.sortOption = params['sort'] || 'name-asc';
-
-      // Load view mode
-      this.viewMode = params['view'] === 'list' ? 'list' : 'grid';
-
-      // Apply filters with loaded state
-      if (this.projects.length > 0) {
-        this.applyFilters();
-      }
-    });
-  }
-
-  private updateUrl() {
-    const queryParams: any = {};
-
-    // Add search to URL if present
-    if (this.searchTerm) {
-      queryParams.search = this.searchTerm;
-    }
-
-    // Add techs to URL if any selected
-    if (this.selectedTechs.length > 0) {
-      queryParams.techs = this.selectedTechs.join(',');
-    }
-    // Add sort if not default
-    if (this.sortOption !== 'name-asc') {
-      queryParams.sort = this.sortOption;
-    }
-    // Add view mode if not default
-    if (this.viewMode !== 'grid') {
-      queryParams.view = this.viewMode;
-    }
-    // Update URL without reloading page
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge',
-      replaceUrl: false
-    });
-  }
-
-  onSortChange() {
-    this.applyFilters();
-    this.updateUrl();
-  }
-
-  onSearchChange(term: string) {
-    this.searchTerm = term;
-    this.applyFilters();
-    this.updateUrl();
-  }
-
-  onFilterChange(selectedTechs: string[]) {
-    this.selectedTechs = selectedTechs;
-    this.applyFilters();
-    this.updateUrl();
-  }
-
-  onViewModeChange() {
-    this.updateUrl();
-  }
-
-  private applyFilters() {
-    let filtered = this.projects;
-
-    // Apply tech filter
-    if (this.selectedTechs.length > 0) {
-      filtered = filtered.filter(project =>
-        this.selectedTechs.some(tech =>
-          project.techStack.some((stack: string) =>
-            stack.toLowerCase() === tech.toLowerCase()
-          )
-        )
-      );
-    }
-
-    // Apply search filter
-    if (this.searchTerm) {
-      filtered = filtered.filter(project =>
-        project.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
-    }
-
-    filtered = this.sortProjects(filtered);
-
-    this.filteredProjects = filtered;
-  }
-
-  sortProjects(projects: GitHubRepo[]): GitHubRepo[] {
-    const sorted = [...projects];
-
-    switch (this.sortOption) {
-      case 'name-asc':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'name-desc':
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      case 'stars-desc':
-        return sorted.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
-      case 'stars-asc':
-        return sorted.sort((a, b) => (a.stargazers_count || 0) - (b.stargazers_count || 0));
-      case 'date-desc':
-        return sorted.sort((a, b) => {
-          const dateA = new Date(a.updated_at || 0).getTime();
-          const dateB = new Date(b.updated_at || 0).getTime();
-          return dateB - dateA;
-        });
-      case 'date-asc':
-        return sorted.sort((a, b) => {
-          const dateA = new Date(a.updated_at || 0).getTime();
-          const dateB = new Date(b.updated_at || 0).getTime();
-          return dateA - dateB;
-        });
-      default:
-        return sorted;
-    }
-  }
-
-  extractUniqueTechs(projects: GitHubRepo[]): string[] {
-    const techSet = new Set<string>();
-    projects.forEach(project => {
-      project.techStack.forEach(tech => {
-        techSet.add(tech)
-      });
-    });
-    return Array.from(techSet).sort();
-  }
 
   cols$ = this.breakpointObserver.observe([
     Breakpoints.XSmall,
@@ -212,4 +68,69 @@ export class Homepage implements OnInit {
       return 3
     })
   )
+
+  ngOnInit(): void {
+
+    this.viewModeSubject
+      .pipe(
+        startWith(this._viewMode),
+        distinctUntilChanged(),
+        pairwise(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([prev, curr]) => {
+        if (!this.isInitialLoad && prev !== curr) {
+          this.projectState.updateState({ viewMode: curr })
+        }
+      })
+
+    // Sync local state with service state
+    this.state$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this._viewMode = state.viewMode;
+        this.selectedTechs = state.selectedTechs;
+        this.searchTerm = state.searchTerm;
+        this.sortOption = state.sortOption;
+
+        // Sync to URL
+        if (!this.isInitialLoad) {
+          this.urlSync.syncStateToUrl(state);
+        }
+      });
+
+    this.projectService.transformToProjects()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (projects) => {
+          this.projectState.setProjects(projects);
+
+          // Load initial state from URL
+          const urlState = this.urlSync.loadStateFromUrl();
+          this.projectState.setState(urlState);
+
+          setTimeout(() => this.isInitialLoad = false, 0);
+        },
+        error: (error) => {
+          console.error('Error fetching GitHub repos:', error)
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onSearchChange(term: string) {
+    this.projectState.updateState({ searchTerm: term });
+  }
+
+  onFilterChange(selectedTechs: string[]) {
+    this.projectState.updateState({ selectedTechs: selectedTechs });
+  }
+
+  onSortChange() {
+    this.projectState.updateState({ sortOption: this.sortOption });
+  }
 }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { GitHubRepo, ProjectInterface } from '../interface/project.interface';
+import { GitHubRepo } from '../interface/project.interface';
 
 @Injectable({
   providedIn: 'root',
