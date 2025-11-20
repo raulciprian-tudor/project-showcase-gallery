@@ -1,7 +1,10 @@
 <div class="projects-container">
   <h1 style="text-align: center; padding: 1em">Project Gallery</h1>
   <div class="toolbar-container">
-    <app-filter></app-filter>
+    <app-filter
+      (filterChange)="onFilterChange($event)"
+      [availableTechs]="availableTechs"
+    ></app-filter>
 
     <div class="view-controls">
       <mat-button-toggle-group [(value)]="viewMode">
@@ -17,7 +20,7 @@
   <!-- Grid View -->
   @if (viewMode === 'grid') {
   <mat-grid-list [cols]="cols$ | async" rowHeight="1:1" gutterSize="10px">
-    @for(project of projects; track project.id) {
+    @for(project of filteredProjects; track project.id) {
     <mat-grid-tile>
       <app-project-card [project]="project"></app-project-card>
     </mat-grid-tile>
@@ -28,7 +31,7 @@
   <!-- List View -->
   @if (viewMode === 'list') {
   <div class="list-view">
-    @for(project of projects; track project.id) {
+    @for(project of filteredProjects; track project.id) {
     <app-project-card [project]="project" class="list-item"></app-project-card>
     }
   </div>

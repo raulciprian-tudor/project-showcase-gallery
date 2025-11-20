@@ -25,7 +25,11 @@ h1 {
   margin: 0 auto $spacing-lg auto;
   max-width: 1400px;
   width: 100%;
+  gap: $spacing-md;
+  padding: 0 $spacing-md;
 }
+
+
 
 .view-controls {
   display: flex;

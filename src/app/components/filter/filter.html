@@ -1,8 +1,7 @@
 <mat-toolbar>
-  <span class="filter-label">Filter by:</span>
   <mat-chip-listbox [(ngModel)]="selectedTechs" multiple aria-label="Tech Selection">
-    <mat-chip-option value="angular">Angular</mat-chip-option>
-    <mat-chip-option value="typescript">React</mat-chip-option>
-    <mat-chip-option value="rxjs">Vue</mat-chip-option>
+    @for (tech of availableTechs; track tech) {
+    <mat-chip-option [value]="tech">{{ tech }}</mat-chip-option>
+    }
   </mat-chip-listbox>
 </mat-toolbar>

@@ -1,21 +1,36 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ProjectInterface } from '../interface/project.interface';
+import { GitHubRepo, ProjectInterface } from '../interface/project.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient)
+  private username = 'raulciprian-tudor'
+  private apiUrl = `https://api.github.com/users/${this.username}/repos`;
 
-  getProjects(): Observable<ProjectInterface[]> {
-    return this.http.get<ProjectInterface[]>('dummy-projects.json');
-  }
+  getRepoFromGithHub(): Observable<GitHubRepo[]> {
+    return this.http.get<GitHubRepo[]>(this.apiUrl, {
+      params: {
+        sort: 'updated',
+        per_page: '100'
+      }
+    })
+  };
 
-  getProjectById(id: string): Observable<ProjectInterface | undefined> {
-    return this.http
-      .get<ProjectInterface[]>('dummy-projects.json')
-      .pipe(map((projects) => projects.find((project) => project.id === id)));
+  transformToProjects(): Observable<any[]> {
+    return this.getRepoFromGithHub().pipe(
+      map(repos => repos.map(repo => ({
+        id: `proj-${repo.id}`,
+        name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        description: repo.description || 'No description available',
+        techStack: repo.topics.length > 0 ? repo.topics : [repo.language],
+        url: repo.html_url,
+        homepage: repo.homepage,
+        stars: repo.stargazers_count
+      })))
+    );
   }
 }

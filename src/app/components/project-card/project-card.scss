@@ -79,3 +79,11 @@ mat-card-actions {
     }
   }
 }
+
+mat-chip {
+  background: transparent;
+  ::ng-deep .mat-mdc-chip-action-label {
+    color: $dark-text-primary !important;
+    text-transform: capitalize;
+  }
+}
