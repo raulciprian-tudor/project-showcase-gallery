@@ -1,7 +1,13 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title>{{ project.name }}</mat-card-title>
-    <mat-card-subtitle>{{ project.techStack }}</mat-card-subtitle>
+    <mat-card-subtitle>
+      <mat-chip-set>
+        @for (tech of getTechStackArray(project.techStack); track tech) {
+        <mat-chip>{{ tech }}</mat-chip>
+        }
+      </mat-chip-set>
+    </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <p>{{ project.description }}</p>

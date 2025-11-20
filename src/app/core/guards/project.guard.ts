@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { ProjectService } from '../services/project.service';
-import { ProjectInterface } from '../interface/project.interface';
 
 export const projectGuard: CanActivateFn = (route, state) => {
   const projectService = inject(ProjectService);
@@ -13,8 +12,9 @@ export const projectGuard: CanActivateFn = (route, state) => {
     return router.createUrlTree(['/404']);
   }
 
-  return projectService.getProjectById(projectId).pipe(
-    map((project: ProjectInterface | undefined) => {
+  return projectService.transformToProjects().pipe(
+    map((projects: any[] | undefined) => {
+      const project = projects?.find(p => p.id === projectId);
       if (project) {
         return true;
       } else {
@@ -22,7 +22,7 @@ export const projectGuard: CanActivateFn = (route, state) => {
       }
     }),
     catchError(() => {
-      return of(router.createUrlTree(['/404']));
+      return of(router.createUrlTree(['/404']))
     })
-  );
+  )
 };
