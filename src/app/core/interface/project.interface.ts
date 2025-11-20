@@ -19,7 +19,7 @@ export interface GitHubRepo {
   id: number;
   name: string;
   description: string;
-  html_url: string;
+  url: string;
   language: string;
   topics: string[],
   created_at: string;

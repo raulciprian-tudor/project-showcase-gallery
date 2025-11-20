@@ -1,10 +1,9 @@
 <div class="projects-container">
   <h1 style="text-align: center; padding: 1em">Project Gallery</h1>
   <div class="toolbar-container">
-    <app-filter
-      (filterChange)="onFilterChange($event)"
-      [availableTechs]="availableTechs"
-    ></app-filter>
+    <app-filter (filterChange)="onFilterChange($event)" [availableTechs]="availableTechs" />
+
+    <app-search-bar (searchChange)="onSearchChange($event)" />
 
     <div class="view-controls">
       <mat-button-toggle-group [(value)]="viewMode">

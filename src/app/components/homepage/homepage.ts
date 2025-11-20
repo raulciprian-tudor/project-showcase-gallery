@@ -9,11 +9,12 @@ import { AsyncPipe } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { Filter } from '../filter/filter';
+import { SearchBar } from '../search-bar/search-bar';
 
 
 @Component({
   selector: 'app-homepage',
-  imports: [ProjectCard, MatGridListModule, AsyncPipe, MatButtonToggleModule, MatIconModule, Filter],
+  imports: [ProjectCard, MatGridListModule, MatButtonToggleModule, MatIconModule, Filter, AsyncPipe, SearchBar],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss',
 })
@@ -25,6 +26,8 @@ export class Homepage implements OnInit {
   projects: GitHubRepo[] = [];
   filteredProjects: GitHubRepo[] = [];
   availableTechs: string[] = [];
+  selectedTechs: string[] = [];
+  searchTerm: string = '';
 
   ngOnInit(): void {
     this.projectService.transformToProjects().subscribe({
@@ -39,14 +42,38 @@ export class Homepage implements OnInit {
     })
   }
 
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+    this.applyFilters();
+  }
+
   onFilterChange(selectedTechs: string[]) {
-    if (selectedTechs.length === 0) {
-      this.filteredProjects = this.projects;
-    } else {
-      this.filteredProjects = this.projects.filter(project => selectedTechs.some(tech =>
-        project.techStack.some((stack: string) => stack.toLowerCase() === tech.toLowerCase())
-      ))
+    this.selectedTechs = selectedTechs;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    let filtered = this.projects;
+
+    // Apply tech filter
+    if (this.selectedTechs.length > 0) {
+      filtered = filtered.filter(project =>
+        this.selectedTechs.some(tech =>
+          project.techStack.some((stack: string) =>
+            stack.toLowerCase() === tech.toLowerCase()
+          )
+        )
+      )
+    };
+
+    // Apply search filter
+    if (this.searchTerm) {
+      filtered = filtered.filter(project =>
+        project.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      )
     }
+
+    this.filteredProjects = filtered;
   }
 
   extractUniqueTechs(projects: GitHubRepo[]): string[] {
