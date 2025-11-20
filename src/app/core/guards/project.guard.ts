@@ -15,11 +15,9 @@ export const projectGuard: CanActivateFn = (route, state) => {
   return projectService.transformToProjects().pipe(
     map((projects: any[] | undefined) => {
       const project = projects?.find(p => p.id === projectId);
-      console.log('Found project:', project);
       if (project) {
         return true;
       } else {
-        console.log('Redirecting to 404');
         return router.createUrlTree(['/404']);
       }
     }),
