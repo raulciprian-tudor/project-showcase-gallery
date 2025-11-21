@@ -1,60 +1,29 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { filter, map, distinctUntilChanged, startWith } from 'rxjs/operators';
-import { Breadcrumb } from '../../core/interface/project.interface';
-import { Observable } from 'rxjs';
+import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 
+/**
+ * Component displaying navigation breadcrumbs.
+ * Features:
+ * - Displays current navigation path
+ * - Automatically updates on route changes
+ * - Provides clickable links to parent routes
+ */
 @Component({
   selector: 'app-breadcrumb',
   imports: [CommonModule, MatIconModule, RouterModule],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.scss',
 })
-export class BreadcrumbComponent implements OnInit {
-  private router = inject(Router);
-  private activatedRoute = inject(ActivatedRoute);
+export class BreadcrumbComponent {
+  private breadcrumbService = inject(BreadcrumbService);
 
-  breadcrumbs$!: Observable<Breadcrumb[]>;
+  /**
+   * Observable stream of breadcrumbs from service.
+   * Automatically update when route changes.
+   */
 
-  ngOnInit(): void {
-    this.breadcrumbs$ = this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-        startWith(null),
-        distinctUntilChanged(),
-        map(() => this.buildBreadcrumbs(this.activatedRoute.root))
-      );
-  }
-
-  private buildBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
-    if (breadcrumbs.length === 0) {
-      breadcrumbs.push({ label: 'Home', url: '/' });
-    }
-
-    const children: ActivatedRoute[] = route.children;
-
-    if (children.length === 0) {
-      return breadcrumbs;
-    }
-
-    for (const child of children) {
-      const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-
-      if (routeURL !== '') {
-        url += `/${routeURL}`;
-      }
-
-      const label = child.snapshot.data['breadcrumb'];
-      if (label) {
-        breadcrumbs.push({ label, url });
-      }
-
-      return this.buildBreadcrumbs(child, url, breadcrumbs);
-    }
-
-    return breadcrumbs;
-  }
+  breadcrumbs$ = this.breadcrumbService.getBreadcrumbs();
 }

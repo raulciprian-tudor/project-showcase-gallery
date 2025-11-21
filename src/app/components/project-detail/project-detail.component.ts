@@ -11,9 +11,19 @@ import { ProjectStateService } from '../../core/services/project-state.service';
 import { GitHubRepo } from '../../core/interface/project.interface';
 import { Subject, take, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { CarouselService } from '../../core/services/carousel.service';
+import { RelatedProjectsService } from '../../core/services/related-projects.service';
 
+/**
+ * Component displaying detailed information about a single project.
+ * Features:
+ * - Project metadata and description
+ * - Screenshot carousel with keyboard navigation
+ * - Related projects based on tech stack
+ * - Links to GitHub repository and homepage
+ */
 @Component({
-  selector: 'app-project-detail.component',
+  selector: 'app-project-detail',
   imports: [
     CommonModule,
     MatCardModule,
@@ -24,6 +34,7 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
     MatSnackBarModule,
     BreadcrumbComponent
   ],
+  providers: [CarouselService],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
 })
@@ -32,177 +43,263 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private projectState = inject(ProjectStateService);
   private snackBar = inject(MatSnackBar);
-  private username = 'raulciprian-tudor'
+  private carouselService = inject(CarouselService);
+  private relatedProjectsService = inject(RelatedProjectsService);
   private destroy$ = new Subject<void>();
+
+  private readonly GITHUB_USERNAME = 'raulciprian-tudor';
+  private readonly SCROLL_BEHAVIOR: ScrollBehavior = 'smooth';
 
   @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
 
   project: GitHubRepo | null = null;
   relatedProjects: GitHubRepo[] = [];
-  currentImageIndex = 0;
+
+  /**
+   * Gets current carousel image index from service.
+   */
+  get currentImageIndex(): number {
+    return this.carouselService.currentIndex;
+  }
 
   ngOnInit(): void {
-    this.route.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
-        const projectId = params.get('id');
-        this.loadProject(projectId);
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      })
+    this.subscribeToRouteChanges();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.carouselService.reset();
   }
 
+  /**
+   * Subscribes to route parameter changes to load project data.
+   * Scrolls to top on each route change.
+   */
+  private subscribeToRouteChanges(): void {
+    this.route.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const projectId = params.get('id');
+        this.loadProject(projectId);
+        window.scrollTo({ top: 0, behavior: this.SCROLL_BEHAVIOR });
+      });
+  }
 
-  loadProject(id: string | null): void {
+  /**
+   * Loads project data by ID and initializes related components.
+   * 
+   * @param id - Project ID from route parameter
+   * 
+   * Flow:
+   * 1. Validates project ID
+   * 2. Resets component state
+   * 3. Fetches project from state service
+   * 4. Initializes carousel and loads related projects
+   * 5. Handles project not found error
+   */
+  private loadProject(id: string | null): void {
     if (!id) {
       this.router.navigate(['/']);
       return;
     }
 
-    this.currentImageIndex = 0;
-    this.project = null;
-    this.relatedProjects = [];
+    this.resetComponentState();
 
     this.projectState.projects$
       .pipe(take(1))
       .subscribe(projects => {
-        const foundProject = projects.find(p => p.id.toString() === id)
+        const foundProject = projects.find(p => p.id.toString() === id);
 
         if (foundProject) {
-          this.project = foundProject;
-          this.addMockScreenshots();
-          this.loadRelatedProjects(foundProject, projects);
+          this.initializeProject(foundProject, projects);
         } else {
-          this.snackBar.open('Project not found', 'Close', { duration: 3000 });
-          this.router.navigate(['/']);
+          this.handleProjectNotFound();
         }
       });
   }
 
-  loadRelatedProjects(currentProject: GitHubRepo, allProjects: GitHubRepo[]): void {
-    if (!currentProject.techStack || currentProject.techStack.length === 0) {
-      this.relatedProjects = [];
-      return;
+  /**
+   * Resets component state for new project load.
+   */
+  private resetComponentState(): void {
+    this.project = null;
+    this.relatedProjects = [];
+    this.carouselService.reset();
+  }
+
+  /**
+   * Initializes project and related components.
+   * 
+   * @param project - The loaded project
+   * @param allProjects - Complete list of projects for finding related ones
+   */
+  private initializeProject(project: GitHubRepo, allProjects: GitHubRepo[]): void {
+    this.project = project;
+    this.addMockScreenshots();
+
+    if (project.screenshots && project.screenshots.length > 0) {
+      this.carouselService.initialize(project.screenshots.length);
     }
 
-    const related = allProjects
-      .filter(project => {
-        if (project.id === currentProject.id) return false;
-
-        if (!project.techStack || project.techStack.length === 0) return false;
-
-        const matchingTech = project.techStack.filter(topic => currentProject.techStack?.includes(topic))
-
-        return matchingTech.length > 0;
-      })
-      .map(project => ({
-        project,
-        matchScore: project.techStack!.filter(topic =>
-          currentProject.techStack?.includes(topic)
-        ).length
-      }))
-      .sort((a, b) => {
-        if (b.matchScore !== a.matchScore) {
-          return b.matchScore - a.matchScore;
-        }
-        return (b.project.stargazers_count || 0) - (a.project.stargazers_count || 0)
-      })
-      .slice(0, 4)
-      .map(item => item.project);
-
-    this.relatedProjects = related;
+    this.relatedProjects = this.relatedProjectsService.findRelatedProjects(
+      project,
+      allProjects
+    );
   }
 
-  navigateToProject(projectId: number): void {
-    this.currentImageIndex = 0;
-
-    this.router.navigate(['/project', projectId])
+  /**
+   * Handles project not found error.
+   * Shows snackbar notification and redirects to home.
+   */
+  private handleProjectNotFound(): void {
+    this.snackBar.open('Project not found', 'Close', { duration: 3000 });
+    this.router.navigate(['/']);
   }
 
+  /**
+   * TODO: Remove when real screenshots are available.
+   * Adds mock screenshots for demonstration purposes.
+   */
   private addMockScreenshots(): void {
     if (this.project) {
       this.project.screenshots = [
-        'https://images.unsplash.com/photo-1533022139390-e31c488d69e2?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://plus.unsplash.com/premium_photo-1721955487745-a2c3aea86d1c?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        'https://images.unsplash.com/photo-1533022139390-e31c488d69e2?q=80&w=1032&auto=format&fit=crop',
+        'https://plus.unsplash.com/premium_photo-1721955487745-a2c3aea86d1c?q=80&w=1032&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?q=80&w=1170&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1170&auto=format&fit=crop',
       ];
     }
   }
 
+  // ==================== Carousel Methods ====================
+
+  /**
+   * Navigates to next carousel image.
+   */
   nextImage(): void {
-    if (this.project?.screenshots && this.currentImageIndex < this.project.screenshots.length - 1) {
-      this.currentImageIndex++;
+    if (this.carouselService.next()) {
       this.announceImageChange();
     }
   }
 
+  /**
+   * Navigates to previous carousel image.
+   */
   previousImage(): void {
-    if (this.currentImageIndex > 0) {
-      this.currentImageIndex--;
+    if (this.carouselService.previous()) {
       this.announceImageChange();
     }
   }
 
+  /**
+   * Navigates to specific carousel image.
+   * 
+   * @param index - Target image index
+   */
   goToImage(index: number): void {
-    if (this.project?.screenshots && index >= 0 && index < this.project.screenshots.length) {
-      this.currentImageIndex = index;
+    if (this.carouselService.goTo(index)) {
       this.announceImageChange();
-    }
-  } onKeyDown(event: KeyboardEvent): void {
-    switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault();
-        this.previousImage();
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        this.nextImage();
-        break;
-      case 'Home':
-        event.preventDefault();
-        this.goToImage(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        if (this.project?.screenshots) {
-          this.goToImage(this.project.screenshots.length - 1);
-        }
-        break;
     }
   }
 
+  /**
+   * Handles keyboard navigation for carousel.
+   * 
+   * @param event - Keyboard event
+   * 
+   * Supported keys:
+   * - ArrowLeft: Previous image
+   * - ArrowRight: Next image
+   * - Home: First image
+   * - End: Last image
+   */
+  onKeyDown(event: KeyboardEvent): void {
+    const handlers: Record<string, () => void> = {
+      'ArrowLeft': () => this.previousImage(),
+      'ArrowRight': () => this.nextImage(),
+      'Home': () => {
+        this.carouselService.goToFirst();
+        this.announceImageChange();
+      },
+      'End': () => {
+        this.carouselService.goToLast();
+        this.announceImageChange();
+      }
+    };
+
+    const handler = handlers[event.key];
+    if (handler) {
+      event.preventDefault();
+      handler();
+    }
+  }
+
+  /**
+   * Announces image change to screen readers by focusing carousel container.
+   */
   private announceImageChange(): void {
     if (this.carouselContainer) {
       this.carouselContainer.nativeElement.focus();
     }
   }
 
+  /**
+   * Opens screenshot in new tab.
+   * 
+   * @param screenshot - Screenshot URL
+   */
   openImageModal(screenshot: string): void {
     window.open(screenshot, '_blank');
   }
 
+  // ==================== Navigation Methods ====================
 
+  /**
+   * Navigates to related project detail page.
+   * 
+   * @param projectId - ID of related project
+   */
+  navigateToProject(projectId: number): void {
+    this.router.navigate(['/project', projectId]);
+  }
 
+  /**
+   * Navigates back to homepage.
+   */
   goBack(): void {
     this.router.navigate(['/']);
   }
 
+  /**
+   * Opens project's GitHub repository in new tab.
+   * Constructs URL from username and project name.
+   */
   openGithub(): void {
-    if (this.project?.name && this.username) {
-      const repoName = this.project.name.toLowerCase().replace(/\s+/g, '-');
-      const githubUrl = `https://github.com/${this.username}/${repoName}`;
+    if (this.project?.name) {
+      const repoName = this.formatRepoName(this.project.name);
+      const githubUrl = `https://github.com/${this.GITHUB_USERNAME}/${repoName}`;
       window.open(githubUrl, '_blank');
     }
   }
 
+  /**
+   * Opens project's homepage in new tab.
+   */
   openHomepage(): void {
     if (this.project?.homepage) {
-      window.open(this.project.homepage, '_blank')
+      window.open(this.project.homepage, '_blank');
     }
+  }
+
+  /**
+   * Formats project name for GitHub URL.
+   * Converts to lowercase and replaces spaces with hyphens.
+   * 
+   * @param name - Project name
+   * @returns Formatted repository name
+   */
+  private formatRepoName(name: string): string {
+    return name.toLowerCase().replace(/\s+/g, '-');
   }
 }

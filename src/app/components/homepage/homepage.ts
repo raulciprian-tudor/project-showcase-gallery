@@ -14,7 +14,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { ProjectStateService } from '../../core/services/project-state.service';
 import { UrlSyncService } from '../../core/services/url-sync.service';
 
-
+/**
+ * Main homepage component displaying project portfolio.
+ * Features:
+ * - Responsive grid/list view toggle
+ * - Project search and filtering by technology
+ * - Multiple sort options (name, stars, date)
+ * - URL state synchronization
+ * - Adaptive column layout based on screen size
+ */
 @Component({
   selector: 'app-homepage',
   imports: [
@@ -58,6 +66,12 @@ export class Homepage implements OnInit, OnDestroy {
   searchTerm: string = '';
   sortOption: string = 'name-asc';
 
+  /**
+   * Observable that determines number of grid columns based on screen size.
+   * - XSmall: 1 column
+   * - Small: 2 columns
+   * - Medium+: 3 columns
+   */
   cols$ = this.breakpointObserver.observe([
     Breakpoints.XSmall,
     Breakpoints.Small,
@@ -122,14 +136,27 @@ export class Homepage implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Handles search term changes from search bar.
+   *
+   * @param term - Search term entered by user
+   */
   onSearchChange(term: string) {
     this.projectState.updateState({ searchTerm: term });
   }
 
+  /**
+   * Handles filter changes from filter component.
+   *
+   * @param selectedTechs - Array of selected technology filters
+   */
   onFilterChange(selectedTechs: string[]) {
     this.projectState.updateState({ selectedTechs: selectedTechs });
   }
 
+  /**
+   * Handles sort option changes from dropdown.
+   */
   onSortChange() {
     this.projectState.updateState({ sortOption: this.sortOption });
   }

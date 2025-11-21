@@ -3,6 +3,14 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GitHubRepo, ProjectFilterState } from '../interface/project.interface';
 
+/**
+ * Service managing global project state and filtering logic.
+ * Features:
+ * - Centralized state management for projects
+ * - Reactive filtering and sorting
+ * - Search, technology filter, and sort options
+ * - Available technology extraction
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -32,23 +40,55 @@ export class ProjectStateService {
     map(projects => this.extractUniqueTechs(projects))
   );
 
+  /**
+   * Sets the complete list of projects.
+   *
+   * @param projects - Array of GitHub repositories
+   */
   setProjects(projects: GitHubRepo[]) {
     this.allProjects$.next(projects);
   }
 
+  /**
+   * Updates filter state with partial changes.
+   *
+   * @param partial - Partial state updates to merge
+   */
   updateState(partial: Partial<ProjectFilterState>) {
     const currentState = this.filterState$.value;
     this.filterState$.next({ ...currentState, ...partial });
   }
 
+  /**
+   * Gets current filter state snapshot.
+   *
+   * @returns Current filter state
+   */
   getState(): ProjectFilterState {
     return this.filterState$.value;
   }
 
+  /**
+   * Sets complete filter state.
+   *
+   * @param state - New filter state
+   */
   setState(state: ProjectFilterState) {
     this.filterState$.next(state);
   }
 
+  /**
+   * Applies all filters and sorting to projects.
+   *
+   * @param projects - Projects to filter
+   * @param state - Current filter state
+   * @returns Filtered and sorted projects
+   *
+   * Algorithm:
+   * 1. Filters by selected technologies (if any)
+   * 2. Filters by search term (if any)
+   * 3. Applies selected sort option
+   */
   private applyFiltersAndSort(projects: GitHubRepo[], state: ProjectFilterState): GitHubRepo[] {
     let filtered = [...projects];
 
@@ -72,6 +112,18 @@ export class ProjectStateService {
     return this.sortProjects(filtered, state.sortOption);
   }
 
+  /**
+   * Sorts projects based on selected option.
+   *
+   * @param projects - Projects to sort
+   * @param sortOption - Sort option key
+   * @returns Sorted projects
+   *
+   * Options:
+   * - name-asc/desc: Alphabetical by name
+   * - stars-asc/desc: By GitHub star count
+   * - date-asc/desc: By last update date
+   */
   private sortProjects(projects: GitHubRepo[], sortOption: string): GitHubRepo[] {
     const sorted = [...projects];
 
@@ -107,6 +159,12 @@ export class ProjectStateService {
     }
   }
 
+  /**
+   * Extracts unique technologies from all projects.
+   *
+   * @param projects - Projects to extract technologies from
+   * @returns Sorted array of unique technology names
+   */
   private extractUniqueTechs(projects: GitHubRepo[]): string[] {
     const techSet = new Set<string>();
 

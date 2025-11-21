@@ -6,6 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 
+/**
+ * Search bar component with debounced input.
+ * Features:
+ * - Debounced search input (300ms)
+ * - Clear button
+ * - Syncs with parent state
+ * - Prevents duplicate search events
+ */
 @Component({
   selector: 'app-search-bar',
   imports: [
@@ -36,6 +44,11 @@ export class SearchBar implements OnChanges, OnDestroy {
       });
   }
 
+  /**
+   * Syncs search input with parent state on input changes.
+   *
+   * @param changes - Input property changes
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['initialValue']?.currentValue !== undefined) {
       this.searchControl.setValue(changes['initialValue'].currentValue, { emitEvent: false });
@@ -47,6 +60,9 @@ export class SearchBar implements OnChanges, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Clears search input and triggers search event.
+   */
   clearSearch() {
     this.searchControl.setValue('', { emitEvent: true });
   }
