@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectStateService } from '../../core/services/project-state.service';
 import { GitHubRepo } from '../../core/interface/project.interface';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 @Component({
@@ -27,28 +27,45 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private projectState = inject(ProjectStateService);
   private snackBar = inject(MatSnackBar);
   private username = 'raulciprian-tudor'
+  private destroy$ = new Subject<void>();
 
   @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
 
   project: GitHubRepo | null = null;
+  relatedProjects: GitHubRepo[] = [];
   currentImageIndex = 0;
 
   ngOnInit(): void {
-    const projectId = this.route.snapshot.paramMap.get('id');
-    this.loadProject(projectId);
+    this.route.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const projectId = params.get('id');
+        this.loadProject(projectId);
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      })
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   loadProject(id: string | null): void {
     if (!id) {
       this.router.navigate(['/']);
       return;
     }
+
+    this.currentImageIndex = 0;
+    this.project = null;
+    this.relatedProjects = [];
 
     this.projectState.projects$
       .pipe(take(1))
@@ -58,11 +75,52 @@ export class ProjectDetailComponent implements OnInit {
         if (foundProject) {
           this.project = foundProject;
           this.addMockScreenshots();
+          this.loadRelatedProjects(foundProject, projects);
         } else {
           this.snackBar.open('Project not found', 'Close', { duration: 3000 });
           this.router.navigate(['/']);
         }
       });
+  }
+
+  loadRelatedProjects(currentProject: GitHubRepo, allProjects: GitHubRepo[]): void {
+    if (!currentProject.techStack || currentProject.techStack.length === 0) {
+      this.relatedProjects = [];
+      return;
+    }
+
+    const related = allProjects
+      .filter(project => {
+        if (project.id === currentProject.id) return false;
+
+        if (!project.techStack || project.techStack.length === 0) return false;
+
+        const matchingTech = project.techStack.filter(topic => currentProject.techStack?.includes(topic))
+
+        return matchingTech.length > 0;
+      })
+      .map(project => ({
+        project,
+        matchScore: project.techStack!.filter(topic =>
+          currentProject.techStack?.includes(topic)
+        ).length
+      }))
+      .sort((a, b) => {
+        if (b.matchScore !== a.matchScore) {
+          return b.matchScore - a.matchScore;
+        }
+        return (b.project.stargazers_count || 0) - (a.project.stargazers_count || 0)
+      })
+      .slice(0, 4)
+      .map(item => item.project);
+
+    this.relatedProjects = related;
+  }
+
+  navigateToProject(projectId: number): void {
+    this.currentImageIndex = 0;
+
+    this.router.navigate(['/project', projectId])
   }
 
   private addMockScreenshots(): void {

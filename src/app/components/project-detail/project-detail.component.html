@@ -183,4 +183,69 @@
     <mat-spinner diameter="60"></mat-spinner>
   </div>
   }
+
+  <!-- Related Projects Section -->
+  @if (relatedProjects.length > 0) {
+  <div class="related-projects-section mt-xl">
+    <h2 class="section-heading text-xxl font-semibold text-primary mb-lg flex items-center gap-sm">
+      <mat-icon>explore</mat-icon>
+      Related Projects
+    </h2>
+
+    <div class="related-projects-grid">
+      @for (relatedProject of relatedProjects; track relatedProject.id) {
+      <mat-card
+        class="related-project-card"
+        (click)="navigateToProject(relatedProject.id)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="navigateToProject(relatedProject.id)"
+        (keydown.space)="navigateToProject(relatedProject.id)"
+      >
+        <mat-card-header>
+          <mat-card-title class="related-card-title">
+            {{ relatedProject.name }}
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="related-description text-sm text-secondary leading-normal">
+            {{ relatedProject.description || 'No description available.' }}
+          </p>
+
+          <div class="related-meta flex items-center gap-md mt-sm">
+            @if (relatedProject.language) {
+            <span class="meta-badge flex items-center gap-xs text-xs">
+              <mat-icon class="small-icon">code</mat-icon>
+              {{ relatedProject.language }}
+            </span>
+            }
+            <span class="meta-badge flex items-center gap-xs text-xs">
+              <mat-icon class="small-icon">star</mat-icon>
+              {{ relatedProject.stargazers_count || 0 }}
+            </span>
+          </div>
+
+          <mat-chip-set class="related-tech-stack mt-md">
+            @for (tech of relatedProject.topics?.slice(0, 3); track tech) {
+            <mat-chip class="mini-tech-chip">{{ tech }}</mat-chip>
+            } @if (relatedProject.topics && relatedProject.topics.length > 3) {
+            <mat-chip class="mini-tech-chip more-chip">
+              +{{ relatedProject.topics.length - 3 }}
+            </mat-chip>
+            }
+          </mat-chip-set>
+        </mat-card-content>
+
+        <mat-card-actions class="related-actions">
+          <span class="view-link text-sm">
+            View Project
+            <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+          </span>
+        </mat-card-actions>
+      </mat-card>
+      }
+    </div>
+  </div>
+  }
 </div>
