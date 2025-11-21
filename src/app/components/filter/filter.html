@@ -1,9 +1,10 @@
-<mat-toolbar>
+<mat-toolbar class="filter-toolbar">
   <mat-chip-listbox
     [(ngModel)]="selectedTechs"
     (ngModelChange)="filterChange.emit($event)"
     multiple
     aria-label="Tech Selection"
+    class="tech-chips"
   >
     @for (tech of availableTechs; track tech) {
       <mat-chip-option [value]="tech">{{ tech }}</mat-chip-option>

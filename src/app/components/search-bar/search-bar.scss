@@ -5,11 +5,18 @@
 
   ::ng-deep {
     .mat-mdc-text-field-wrapper {
-      background-color: $dark-bg-secondary;
+      background-color: $palette-dark;
     }
 
     .mat-mdc-form-field-focus-overlay {
       background-color: transparent;
+    }
+
+    // Border colors
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: $palette-medium !important;
     }
 
     // Focused state
@@ -17,41 +24,41 @@
       .mdc-notched-outline__leading,
       .mdc-notched-outline__notch,
       .mdc-notched-outline__trailing {
-        border-color: $dark-accent-primary !important;
+        border-color: $palette-light !important;
       }
     }
 
     // Label
     .mdc-floating-label {
-      color: $dark-text-secondary !important;
+      color: $palette-light !important;
     }
 
     .mat-mdc-form-field.mat-focused .mdc-floating-label {
-      color: $dark-accent-primary !important;
+      color: $palette-light !important;
     }
 
     // Input text
     .mat-mdc-input-element,
     input.mat-mdc-input-element {
-      color: $dark-text-primary !important;
-      caret-color: $dark-accent-primary !important;
-      -webkit-text-fill-color: $dark-text-primary !important;
+      color: $palette-lightest !important;
+      caret-color: $palette-light !important;
+      -webkit-text-fill-color: $palette-lightest !important;
 
       &::placeholder {
-        color: $dark-text-muted !important;
+        color: $palette-light !important;
       }
     }
 
     // Icons
     .mat-icon {
-      color: $dark-text-secondary;
+      color: $palette-light;
     }
 
     // Clear button
     .mat-mdc-icon-button {
       &:hover {
         .mat-icon {
-          color: $dark-text-primary;
+          color: $palette-lightest;
         }
       }
     }

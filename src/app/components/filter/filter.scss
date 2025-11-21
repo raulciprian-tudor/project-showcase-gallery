@@ -1,55 +1,47 @@
 @use '../../../styles.scss' as *;
 
-mat-toolbar {
+.filter-toolbar {
   background-color: transparent !important;
   border-radius: 4px;
-  padding: $spacing-md;
+  padding: calc($spacing-unit * 2);
   display: flex;
   align-items: center;
-  gap: $spacing-md;
+  gap: calc($spacing-unit * 2);
+}
 
-  .filter-label {
-    color: $dark-text-primary;
-    font-weight: $font-weight-medium;
-    font-size: $font-size-sm;
-    white-space: nowrap;
-  }
+.tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-unit;
 
-  mat-chip-listbox {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-xs;
+  mat-chip-option {
+    background-color: transparent;
+    font-size: 0.875rem;
+    font-weight: 400;
+    transition: all 0.2s ease;
 
-    mat-chip-option {
-      background-color: transparent;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-regular;
-      transition: all 0.2s ease;
+    ::ng-deep .mat-mdc-chip-action-label {
+      color: $palette-lightest !important;
+    }
+
+    &:hover {
+      background-color: rgba($palette-light, 0.1);
+      border-color: $palette-light;
+    }
+
+    &.mat-mdc-chip-selected {
+      background-color: $palette-light;
+      border-color: $palette-light;
+      font-weight: 500;
 
       ::ng-deep .mat-mdc-chip-action-label {
-        color: $dark-text-primary !important;
+        color: $palette-darkest !important;
       }
+    }
 
-      &:hover {
-        background-color: rgba($dark-accent-primary, 0.1);
-        border-color: $dark-accent-primary;
-      }
-
-      &.mat-mdc-chip-selected {
-        background-color: $dark-accent-primary;
-
-        border-color: $dark-accent-primary;
-        font-weight: $font-weight-medium;
-
-        ::ng-deep .mat-mdc-chip-action-label {
-          color: $dark-bg-primary !important;
-        }
-      }
-
-      &:focus {
-        outline: 2px solid $dark-accent-primary;
-        outline-offset: 2px;
-      }
+    &:focus {
+      outline: 2px solid $palette-light;
+      outline-offset: 2px;
     }
   }
 }
