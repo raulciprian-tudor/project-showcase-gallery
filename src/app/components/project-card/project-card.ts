@@ -14,9 +14,13 @@ import { GitHubRepo } from '../../core/interface/project.interface';
 export class ProjectCard {
   @Input({ required: true }) project!: GitHubRepo;
 
+  // get techStack(): string[] {
+  //   return Array.isArray(this.project.techStack)
+  //     ? this.project.techStack
+  //     : [this.project.techStack];
+  // }
+
   get techStack(): string[] {
-    return Array.isArray(this.project.techStack)
-      ? this.project.techStack
-      : [this.project.techStack];
+    return this.project.techStack ?? [];
   }
 }

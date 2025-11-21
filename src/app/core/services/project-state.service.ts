@@ -56,7 +56,7 @@ export class ProjectStateService {
     if (state.selectedTechs.length > 0) {
       filtered = filtered.filter(project =>
         state.selectedTechs.some(tech =>
-          project.techStack.some((stack: string) =>
+          project.techStack!.some((stack: string) =>
             stack.toLowerCase() === tech.toLowerCase()
           )
         )
@@ -65,7 +65,7 @@ export class ProjectStateService {
 
     // Apply search filter
     if (state.searchTerm) {
-      filtered = filtered.filter(project => project.name.toLowerCase().includes(state.searchTerm.toLowerCase()));
+      filtered = filtered.filter(project => project.name!.toLowerCase().includes(state.searchTerm.toLowerCase()));
     }
 
     // Apply sorting
@@ -77,10 +77,10 @@ export class ProjectStateService {
 
     switch (sortOption) {
       case 'name-asc':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        return sorted.sort((a, b) => a.name!.localeCompare(b.name!));
 
       case 'name-desc':
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+        return sorted.sort((a, b) => b.name!.localeCompare(a.name!));
 
       case 'stars-desc':
         return sorted.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
@@ -111,7 +111,7 @@ export class ProjectStateService {
     const techSet = new Set<string>();
 
     projects.forEach(project => {
-      project.techStack.forEach(tech => {
+      project.techStack!.forEach(tech => {
         techSet.add(tech);
       });
     });
