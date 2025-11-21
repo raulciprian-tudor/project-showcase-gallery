@@ -18,3 +18,8 @@ export interface GitHubRepo {
   stargazers_count?: number;
   techStack?: string[],
 }
+
+export interface Breadcrumb {
+  label: string;
+  url: string;
+}

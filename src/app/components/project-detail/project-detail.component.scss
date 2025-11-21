@@ -1,1 +1,186 @@
 @use '../../../styles.scss' as *;
+
+.project-detail-container {
+  min-height: 100vh;
+  padding: calc($spacing-unit * 4) calc($spacing-unit * 2);
+}
+
+.detail-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.project-header {
+  position: relative;
+  margin-bottom: calc($spacing-unit * 4);
+}
+
+.back-button {
+  position: absolute;
+  top: 0;
+  left: -$spacing-unit;
+  color: $palette-light;
+  
+  &:hover {
+    color: $palette-lightest;
+    background-color: rgba($palette-light, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    position: static;
+    margin-bottom: calc($spacing-unit * 2);
+  }
+}
+
+.header-content {
+  padding-left: calc($spacing-unit * 6);
+  
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
+}
+
+.project-name {
+  line-height: 1.2;
+  word-break: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.meta-info {
+  @media (max-width: 768px) {
+    gap: calc($spacing-unit * 2);
+  }
+}
+
+.meta-item {
+  .meta-icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: $palette-light;
+  }
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-unit;
+}
+
+.tech-chip {
+  background-color: $palette-medium;
+  color: $palette-lightest;
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  ::ng-deep .mat-mdc-chip-action-label {
+    color: $palette-lightest !important;
+    text-transform: capitalize;
+  }
+}
+
+.info-card {
+  background-color: $palette-dark;
+  border: 1px solid $palette-medium;
+  padding: calc($spacing-unit * 3);
+  
+  mat-card-header {
+    margin-bottom: calc($spacing-unit * 2);
+  }
+  
+  mat-card-content {
+    padding: 0 !important;
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-unit;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $palette-lightest;
+  
+  mat-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: $palette-light;
+  }
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: calc($spacing-unit * 3);
+  margin-bottom: calc($spacing-unit * 3);
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc($spacing-unit * 2);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-unit 0;
+  border-bottom: 1px solid rgba($palette-medium, 0.3);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.info-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.info-value {
+  font-weight: 400;
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.action-section {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.action-btn {
+  min-width: 180px;
+  height: 48px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  
+  mat-icon {
+    margin-right: $spacing-unit;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.loading-container {
+  min-height: 80vh;
+}
+
+@media (max-width: 768px) {
+  .project-detail-container {
+    padding: calc($spacing-unit * 2) $spacing-unit;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}

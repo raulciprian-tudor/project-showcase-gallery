@@ -1,1 +1,98 @@
-<p>project-detail.component works!</p>
+<div class="project-detail-container bg-primary">
+  @if (project) {
+  <div class="detail-wrapper">
+    <app-breadcrumb/>
+    <!-- Header Section -->
+    <div class="project-header">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div class="header-content">
+        <h1 class="project-name text-xxxl font-bold text-primary mb-sm">
+          {{ project.name }}
+        </h1>
+
+        <div class="meta-info flex items-center gap-lg flex-wrap mb-md">
+          <div class="meta-item flex items-center gap-xs">
+            <mat-icon class="meta-icon">star</mat-icon>
+            <span class="text-secondary">{{ project.stargazers_count || 0 }} stars</span>
+          </div>
+
+          @if (project.language) {
+          <div class="meta-item flex items-center gap-xs">
+            <mat-icon class="meta-icon">code</mat-icon>
+            <span class="text-secondary">{{ project.language }}</span>
+          </div>
+          }
+        </div>
+
+        <mat-chip-set class="tech-stack mb-lg">
+          @for (tech of project.topics; track tech) {
+          <mat-chip class="tech-chip">{{ tech }}</mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <mat-card class="info-card mb-lg">
+      <mat-card-header>
+        <mat-card-title class="section-title">
+          <mat-icon>description</mat-icon>
+          Description
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="text-base text-secondary leading-relaxed">
+          {{ project.description || 'No description available.' }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+      <!-- Repository Info -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title class="section-title">
+            <mat-icon>info</mat-icon>
+            Repository Info
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label text-secondary">Created:</span>
+              <span class="info-value text-primary">{{ project.created_at | date }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label text-secondary">Last Updated:</span>
+              <span class="info-value text-primary">{{ project.updated_at | date }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-section flex gap-md justify-center flex-wrap mt-xl">
+      @if (project.url) {
+      <button mat-flat-button color="primary" class="action-btn" (click)="openGithub()">
+        <mat-icon>open_in_new</mat-icon>
+        View on GitHub
+      </button>
+      } @if (project.homepage) {
+      <button mat-stroked-button class="action-btn" (click)="openHomepage()">
+        <mat-icon>language</mat-icon>
+        Visit Website
+      </button>
+      }
+    </div>
+  </div>
+  } @else {
+  <div class="loading-container flex items-center justify-center">
+    <mat-spinner diameter="60"></mat-spinner>
+  </div>
+  }
+</div>
