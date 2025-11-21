@@ -31,6 +31,7 @@ export class ProjectService {
         homepage: repo.homepage,
         stars: repo.stargazers_count,
         updated_at: repo.updated_at,
+        created_at: repo.created_at,
       })))
     );
   }

@@ -1,7 +1,7 @@
 <div class="project-detail-container bg-primary">
   @if (project) {
   <div class="detail-wrapper">
-    <app-breadcrumb/>
+    <app-breadcrumb />
     <!-- Header Section -->
     <div class="project-header">
       <button mat-icon-button class="back-button" (click)="goBack()">
@@ -74,6 +74,94 @@
         </mat-card-content>
       </mat-card>
     </div>
+
+    <!-- Screenshot Carousel Section -->
+    @if (project.screenshots && project.screenshots.length > 0) {
+    <mat-card class="info-card carousel-card mb-lg">
+      <mat-card-header>
+        <mat-card-title class="section-title">
+          <mat-icon>photo_library</mat-icon>
+          Screenshots
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div
+          class="carousel-container"
+          (keydown)="onKeyDown($event)"
+          tabindex="0"
+          role="region"
+          aria-label="Project screenshots carousel"
+          #carouselContainer
+        >
+          <button
+            mat-icon-button
+            class="carousel-nav carousel-prev"
+            (click)="previousImage()"
+            [disabled]="currentImageIndex === 0"
+            aria-label="Previous screenshot"
+            tabindex="-1"
+          >
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          <div class="carousel-viewport">
+            <div
+              class="carousel-track"
+              [style.transform]="'translateX(-' + currentImageIndex * 100 + '%)'"
+            >
+              @for (screenshot of project.screenshots; track screenshot; let i = $index) {
+              <div
+                class="carousel-slide"
+                [attr.aria-hidden]="i !== currentImageIndex"
+                role="group"
+                [attr.aria-label]="'Screenshot ' + (i + 1) + ' of ' + project.screenshots.length"
+              >
+                <img
+                  [src]="screenshot"
+                  [alt]="'Screenshot ' + (i + 1) + ' of ' + project.name"
+                  class="carousel-image"
+                  (click)="openImageModal(screenshot)"
+                  [tabindex]="i === currentImageIndex ? 0 : -1"
+                />
+              </div>
+              }
+            </div>
+          </div>
+
+          <button
+            mat-icon-button
+            class="carousel-nav carousel-next"
+            (click)="nextImage()"
+            [disabled]="currentImageIndex === project.screenshots.length - 1"
+            aria-label="Next screenshot"
+            tabindex="-1"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <!-- Dot Indicators -->
+        <div class="carousel-indicators flex gap-xs justify-center mt-md" role="tablist">
+          @for (screenshot of project.screenshots; track screenshot; let i = $index) {
+          <button
+            class="indicator-dot"
+            [class.active]="i === currentImageIndex"
+            (click)="goToImage(i)"
+            [attr.aria-label]="'Go to screenshot ' + (i + 1)"
+            [attr.aria-selected]="i === currentImageIndex"
+            role="tab"
+            [tabindex]="i === currentImageIndex ? 0 : -1"
+          ></button>
+          }
+        </div>
+
+        <!-- Image Counter -->
+        <div class="image-counter text-center text-secondary text-sm mt-sm" aria-live="polite">
+          {{ currentImageIndex + 1 }} / {{ project.screenshots.length }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
 
     <!-- Action Buttons -->
     <div class="action-section flex gap-md justify-center flex-wrap mt-xl">

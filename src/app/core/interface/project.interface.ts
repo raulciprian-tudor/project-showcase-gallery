@@ -17,6 +17,7 @@ export interface GitHubRepo {
   homepage?: string;
   stargazers_count?: number;
   techStack?: string[],
+  screenshots?: string[];
 }
 
 export interface Breadcrumb {

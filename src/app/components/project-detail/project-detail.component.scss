@@ -20,12 +20,12 @@
   top: 0;
   left: -$spacing-unit;
   color: $palette-light;
-  
+
   &:hover {
     color: $palette-lightest;
     background-color: rgba($palette-light, 0.1);
   }
-  
+
   @media (max-width: 768px) {
     position: static;
     margin-bottom: calc($spacing-unit * 2);
@@ -34,7 +34,7 @@
 
 .header-content {
   padding-left: calc($spacing-unit * 6);
-  
+
   @media (max-width: 768px) {
     padding-left: 0;
   }
@@ -43,7 +43,7 @@
 .project-name {
   line-height: 1.2;
   word-break: break-word;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -75,7 +75,7 @@
   color: $palette-lightest;
   font-size: 0.875rem;
   font-weight: 500;
-  
+
   ::ng-deep .mat-mdc-chip-action-label {
     color: $palette-lightest !important;
     text-transform: capitalize;
@@ -86,11 +86,11 @@
   background-color: $palette-dark;
   border: 1px solid $palette-medium;
   padding: calc($spacing-unit * 3);
-  
+
   mat-card-header {
     margin-bottom: calc($spacing-unit * 2);
   }
-  
+
   mat-card-content {
     padding: 0 !important;
   }
@@ -103,7 +103,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: $palette-lightest;
-  
+
   mat-icon {
     font-size: 1.5rem;
     width: 1.5rem;
@@ -131,7 +131,7 @@
   align-items: center;
   padding: $spacing-unit 0;
   border-bottom: 1px solid rgba($palette-medium, 0.3);
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -161,11 +161,11 @@
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.05em;
-  
+
   mat-icon {
     margin-right: $spacing-unit;
   }
-  
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -179,8 +179,201 @@
   .project-detail-container {
     padding: calc($spacing-unit * 2) $spacing-unit;
   }
-  
+
   .details-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.carousel-card {
+  mat-card-content {
+    padding: calc($spacing-unit * 3) !important;
+  }
+}
+
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc($spacing-unit * 2);
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid $palette-light;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
+.carousel-viewport {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: $palette-darkest;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  min-height: 400px;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  padding: calc($spacing-unit * 3);
+  box-sizing: border-box;
+}
+
+.carousel-image {
+  max-width: 100%;
+  max-height: 600px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 auto;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $palette-light;
+    outline-offset: 4px;
+  }
+}
+
+.carousel-nav {
+  color: $palette-light;
+  background-color: rgba($palette-dark, 0.9);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+
+  &:hover:not(:disabled) {
+    background-color: $palette-medium;
+    color: $palette-lightest;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $palette-light;
+    outline-offset: 2px;
+  }
+
+  mat-icon {
+    font-size: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    display: none;
+  }
+}
+
+.carousel-prev {
+  order: -1;
+}
+
+.carousel-next {
+  order: 1;
+}
+
+.carousel-indicators {
+  padding: calc($spacing-unit * 2) 0 $spacing-unit 0;
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid $palette-medium;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+
+  &:hover {
+    background-color: rgba($palette-light, 0.5);
+    border-color: $palette-light;
+    transform: scale(1.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $palette-light;
+    outline-offset: 3px;
+  }
+
+  &.active {
+    background-color: $palette-light;
+    border-color: $palette-light;
+    transform: scale(1.3);
+  }
+}
+
+.image-counter {
+  font-weight: 500;
+  margin-top: $spacing-unit;
+}
+
+@media (max-width: 768px) {
+  .carousel-image {
+    max-height: 400px;
+  }
+
+  .carousel-nav {
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .carousel-slide {
+    padding: calc($spacing-unit * 2);
+  }
+
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-container {
+    gap: $spacing-unit;
+  }
+
+  .carousel-nav {
+    mat-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 }
