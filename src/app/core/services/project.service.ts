@@ -22,7 +22,7 @@ export class ProjectService {
 
   transformToProjects(): Observable<any[]> {
     return this.getRepoFromGithHub().pipe(
-      map(repos => repos.map(repo => ({
+      map((repos) => repos.map(repo => ({
         id: `proj-${repo.id}`,
         name: repo.name!.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         description: repo.description || 'No description available',
