@@ -2,6 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectFilterState } from '../interface/project.interface';
 
+/**
+ * Service for synchronizing application state with URL query parameters.
+ * Features:
+ * - Loads initial state from URL on page load
+ * - Syncs filter/search/sort state to URL
+ * - Enables shareable and bookmarkable filtered views
+ * - Omits default values to keep URLs clean
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -9,6 +17,17 @@ export class UrlSyncService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  /**
+   * Loads filter state from URL query parameters.
+   *
+   * @returns Filter state parsed from URL
+   *
+   * Query params:
+   * - search: Search term
+   * - techs: Comma-separated technology list
+   * - sort: Sort option (default: 'name-asc')
+   * - view: View mode (default: 'grid')
+   */
   loadStateFromUrl(): ProjectFilterState {
     const params = this.route.snapshot.queryParams;
 
@@ -20,6 +39,16 @@ export class UrlSyncService {
     }
   }
 
+  /**
+   * Syncs current filter state to URL query parameters.
+   *
+   * @param state - Current filter state to sync
+   *
+   * Behavior:
+   * - Adds history entry (replaceUrl: false)
+   * - Omits default values to keep URL clean
+   * - Updates URL without page reload
+   */
   syncStateToUrl(state: ProjectFilterState) {
     const queryParams: any = {};
 

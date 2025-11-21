@@ -3,6 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { GitHubRepo } from '../interface/project.interface';
 
+/**
+ * Service for fetching and transforming GitHub repository data.
+ * Features:
+ * - Fetches repositories from GitHub API
+ * - Transforms repository data into project format
+ * - Normalizes project names and tech stacks
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -11,6 +18,11 @@ export class ProjectService {
   private username = 'raulciprian-tudor'
   private apiUrl = `https://api.github.com/users/${this.username}/repos`;
 
+  /**
+   * Fetches repositories from GitHub API.
+   *
+   * @returns Observable of GitHub repositories sorted by last update
+   */
   getRepoFromGithHub(): Observable<GitHubRepo[]> {
     return this.http.get<GitHubRepo[]>(this.apiUrl, {
       params: {
@@ -20,9 +32,20 @@ export class ProjectService {
     })
   };
 
+  /**
+   * Transforms GitHub repositories into project format.
+   *
+   * @returns Observable of transformed projects
+   *
+   * Transformations:
+   * - Converts kebab-case names to Title Case
+   * - Uses topics as tech stack, falls back to primary language
+   * - Adds default description for repos without one
+   * - Normalizes property names for application use
+   */
   transformToProjects(): Observable<any[]> {
     return this.getRepoFromGithHub().pipe(
-      map(repos => repos.map(repo => ({
+      map((repos) => repos.map(repo => ({
         id: `proj-${repo.id}`,
         name: repo.name!.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         description: repo.description || 'No description available',
