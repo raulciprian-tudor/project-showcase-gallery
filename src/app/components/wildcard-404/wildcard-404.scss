@@ -1,0 +1,92 @@
+@use '../../../styles.scss' as *;
+
+.not-found-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-wrapper {
+  z-index: 2;
+  max-width: 600px;
+}
+
+.error-code {
+  font-size: 10rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: calc($spacing-unit * 2);
+  text-shadow: 0 4px 20px rgba($palette-light, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 6rem;
+  }
+}
+
+.error-title {
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.error-message {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions-wrapper {
+  display: flex;
+  gap: calc($spacing-unit * 2);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  min-width: 160px;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  
+  @media (max-width: 768px) {
+    min-width: 140px;
+    height: 44px;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.illustration {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  opacity: 0.08;
+  z-index: 1;
+  pointer-events: none;
+  
+  @media (max-width: 768px) {
+    bottom: 5%;
+    right: 5%;
+  }
+}
+
+.large-icon {
+  font-size: 24rem;
+  width: 24rem;
+  height: 24rem;
+  color: $palette-light;
+  
+  @media (max-width: 768px) {
+    font-size: 14rem;
+    width: 14rem;
+    height: 14rem;
+  }
+}

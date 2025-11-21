@@ -24,13 +24,14 @@ export class ProjectService {
     return this.getRepoFromGithHub().pipe(
       map(repos => repos.map(repo => ({
         id: `proj-${repo.id}`,
-        name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        name: repo.name!.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         description: repo.description || 'No description available',
-        techStack: repo.topics.length > 0 ? repo.topics : [repo.language],
+        techStack: repo.topics!.length > 0 ? repo.topics : [repo.language],
         url: repo.url,
         homepage: repo.homepage,
         stars: repo.stargazers_count,
         updated_at: repo.updated_at,
+        created_at: repo.created_at,
       })))
     );
   }

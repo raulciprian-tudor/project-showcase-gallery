@@ -1,0 +1,20 @@
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  @if (breadcrumbs$ | async; as breadcrumbs) {
+  <ol class="breadcrumb-list flex items-center gap-xs">
+    @for (breadcrumb of breadcrumbs; track breadcrumb.url; let isLast = $last) {
+    <li class="breadcrumb-item flex items-center gap-xs">
+      @if (!isLast) {
+      <a [routerLink]="breadcrumb.url" class="breadcrumb-link text-sm text-secondary">
+        {{ breadcrumb.label }}
+      </a>
+      <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+      } @else {
+      <span class="breadcrumb-current text-sm text-primary font-medium">
+        {{ breadcrumb.label }}
+      </span>
+      }
+    </li>
+    }
+  </ol>
+  }
+</nav>

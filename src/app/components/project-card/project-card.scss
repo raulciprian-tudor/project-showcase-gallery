@@ -1,4 +1,4 @@
-@import '../../../styles.scss';
+@use '../../../styles.scss' as *;
 
 :host {
   width: 100%;
@@ -6,19 +6,16 @@
   display: block;
 }
 
-mat-card {
+.project-card {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: $spacing-lg;
-  // border-radius: 0;
-  background-color: $dark-bg-secondary;
-  border: 1px solid $dark-border;
-  color: $dark-text-primary;
-
-  /** ANIMATION */
+  padding: calc($spacing-unit * 3);
+  background-color: $palette-dark;
+  border: 1px solid $palette-medium;
+  color: $palette-lightest;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -27,63 +24,57 @@ mat-card {
   }
 }
 
-mat-card-header {
+.card-header {
   flex-shrink: 0;
-  margin-bottom: $spacing-md;
+  margin-bottom: calc($spacing-unit * 2);
 }
 
-mat-card-title {
-  font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  line-height: $line-height-tight;
-  color: $dark-text-primary;
-  margin-bottom: $spacing-xs;
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: $palette-lightest;
+  margin-bottom: $spacing-unit;
 }
 
-mat-card-subtitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: $dark-accent-primary;
+.card-subtitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $palette-light;
   text-transform: uppercase;
-  letter-spacing: $letter-spacing-wide;
+  letter-spacing: 0.05em;
 }
 
-mat-card-content {
+.card-content {
   flex: 1;
   overflow: auto;
   padding-left: 1em !important;
   padding-right: 1em !important;
-
-  .description {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-regular;
-    line-height: $line-height-normal;
-    color: $dark-text-secondary;
-  }
 }
 
-mat-card-actions {
+.card-actions {
   flex-shrink: 0;
   margin: 0;
-  padding: $spacing-md 0 0 0;
+  padding: calc($spacing-unit * 2) 0 0 0;
+}
 
-  button {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    letter-spacing: $letter-spacing-wide;
-    color: $dark-accent-primary;
-    text-transform: uppercase;
+.action-button {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: $palette-light;
+  text-transform: uppercase;
 
-    &:hover {
-      background-color: $dark-bg-tertiary;
-    }
+  &:hover {
+    background-color: $palette-medium;
   }
 }
 
-mat-chip {
+.tech-chip {
   background: transparent;
+  
   ::ng-deep .mat-mdc-chip-action-label {
-    color: $dark-text-primary !important;
+    color: $palette-lightest !important;
     text-transform: capitalize;
   }
 }

@@ -1,0 +1,251 @@
+<div class="project-detail-container bg-primary">
+  @if (project) {
+  <div class="detail-wrapper">
+    <app-breadcrumb />
+    <!-- Header Section -->
+    <div class="project-header">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div class="header-content">
+        <h1 class="project-name text-xxxl font-bold text-primary mb-sm">
+          {{ project.name }}
+        </h1>
+
+        <div class="meta-info flex items-center gap-lg flex-wrap mb-md">
+          <div class="meta-item flex items-center gap-xs">
+            <mat-icon class="meta-icon">star</mat-icon>
+            <span class="text-secondary">{{ project.stargazers_count || 0 }} stars</span>
+          </div>
+
+          @if (project.language) {
+          <div class="meta-item flex items-center gap-xs">
+            <mat-icon class="meta-icon">code</mat-icon>
+            <span class="text-secondary">{{ project.language }}</span>
+          </div>
+          }
+        </div>
+
+        <mat-chip-set class="tech-stack mb-lg">
+          @for (tech of project.topics; track tech) {
+          <mat-chip class="tech-chip">{{ tech }}</mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <mat-card class="info-card mb-lg">
+      <mat-card-header>
+        <mat-card-title class="section-title">
+          <mat-icon>description</mat-icon>
+          Description
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="text-base text-secondary leading-relaxed">
+          {{ project.description || 'No description available.' }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+      <!-- Repository Info -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title class="section-title">
+            <mat-icon>info</mat-icon>
+            Repository Info
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label text-secondary">Created:</span>
+              <span class="info-value text-primary">{{ project.created_at | date }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label text-secondary">Last Updated:</span>
+              <span class="info-value text-primary">{{ project.updated_at | date }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Screenshot Carousel Section -->
+    @if (project.screenshots && project.screenshots.length > 0) {
+    <mat-card class="info-card carousel-card mb-lg">
+      <mat-card-header>
+        <mat-card-title class="section-title">
+          <mat-icon>photo_library</mat-icon>
+          Screenshots
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div
+          class="carousel-container"
+          (keydown)="onKeyDown($event)"
+          tabindex="0"
+          role="region"
+          aria-label="Project screenshots carousel"
+          #carouselContainer
+        >
+          <button
+            mat-icon-button
+            class="carousel-nav carousel-prev"
+            (click)="previousImage()"
+            [disabled]="currentImageIndex === 0"
+            aria-label="Previous screenshot"
+            tabindex="-1"
+          >
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          <div class="carousel-viewport">
+            <div
+              class="carousel-track"
+              [style.transform]="'translateX(-' + currentImageIndex * 100 + '%)'"
+            >
+              @for (screenshot of project.screenshots; track screenshot; let i = $index) {
+              <div
+                class="carousel-slide"
+                [attr.aria-hidden]="i !== currentImageIndex"
+                role="group"
+                [attr.aria-label]="'Screenshot ' + (i + 1) + ' of ' + project.screenshots.length"
+              >
+                <img
+                  [src]="screenshot"
+                  [alt]="'Screenshot ' + (i + 1) + ' of ' + project.name"
+                  class="carousel-image"
+                  (click)="openImageModal(screenshot)"
+                  [tabindex]="i === currentImageIndex ? 0 : -1"
+                />
+              </div>
+              }
+            </div>
+          </div>
+
+          <button
+            mat-icon-button
+            class="carousel-nav carousel-next"
+            (click)="nextImage()"
+            [disabled]="currentImageIndex === project.screenshots.length - 1"
+            aria-label="Next screenshot"
+            tabindex="-1"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <!-- Dot Indicators -->
+        <div class="carousel-indicators flex gap-xs justify-center mt-md" role="tablist">
+          @for (screenshot of project.screenshots; track screenshot; let i = $index) {
+          <button
+            class="indicator-dot"
+            [class.active]="i === currentImageIndex"
+            (click)="goToImage(i)"
+            [attr.aria-label]="'Go to screenshot ' + (i + 1)"
+            [attr.aria-selected]="i === currentImageIndex"
+            role="tab"
+            [tabindex]="i === currentImageIndex ? 0 : -1"
+          ></button>
+          }
+        </div>
+
+        <!-- Image Counter -->
+        <div class="image-counter text-center text-secondary text-sm mt-sm" aria-live="polite">
+          {{ currentImageIndex + 1 }} / {{ project.screenshots.length }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
+
+    <!-- Action Buttons -->
+    <div class="action-section flex gap-md justify-center flex-wrap mt-xl">
+      @if (project.url) {
+      <button mat-flat-button color="primary" class="action-btn" (click)="openGithub()">
+        <mat-icon>open_in_new</mat-icon>
+        View on GitHub
+      </button>
+      } @if (project.homepage) {
+      <button mat-stroked-button class="action-btn" (click)="openHomepage()">
+        <mat-icon>language</mat-icon>
+        Visit Website
+      </button>
+      }
+    </div>
+  </div>
+  } @else {
+  <div class="loading-container flex items-center justify-center">
+    <mat-spinner diameter="60"></mat-spinner>
+  </div>
+  }
+
+  <!-- Related Projects Section -->
+  @if (relatedProjects.length > 0) {
+  <div class="related-projects-section mt-xl">
+    <h2 class="section-heading text-xxl font-semibold text-primary mb-lg flex items-center gap-sm">
+      <mat-icon>explore</mat-icon>
+      Related Projects
+    </h2>
+
+    <div class="related-projects-grid">
+      @for (relatedProject of relatedProjects; track relatedProject.id) {
+      <mat-card
+        class="related-project-card"
+        (click)="navigateToProject(relatedProject.id)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="navigateToProject(relatedProject.id)"
+        (keydown.space)="navigateToProject(relatedProject.id)"
+      >
+        <mat-card-header>
+          <mat-card-title class="related-card-title">
+            {{ relatedProject.name }}
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="related-description text-sm text-secondary leading-normal">
+            {{ relatedProject.description || 'No description available.' }}
+          </p>
+
+          <div class="related-meta flex items-center gap-md mt-sm">
+            @if (relatedProject.language) {
+            <span class="meta-badge flex items-center gap-xs text-xs">
+              <mat-icon class="small-icon">code</mat-icon>
+              {{ relatedProject.language }}
+            </span>
+            }
+            <span class="meta-badge flex items-center gap-xs text-xs">
+              <mat-icon class="small-icon">star</mat-icon>
+              {{ relatedProject.stargazers_count || 0 }}
+            </span>
+          </div>
+
+          <mat-chip-set class="related-tech-stack mt-md">
+            @for (tech of relatedProject.topics?.slice(0, 3); track tech) {
+            <mat-chip class="mini-tech-chip">{{ tech }}</mat-chip>
+            } @if (relatedProject.topics && relatedProject.topics.length > 3) {
+            <mat-chip class="mini-tech-chip more-chip">
+              +{{ relatedProject.topics.length - 3 }}
+            </mat-chip>
+            }
+          </mat-chip-set>
+        </mat-card-content>
+
+        <mat-card-actions class="related-actions">
+          <span class="view-link text-sm">
+            View Project
+            <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+          </span>
+        </mat-card-actions>
+      </mat-card>
+      }
+    </div>
+  </div>
+  }
+</div>

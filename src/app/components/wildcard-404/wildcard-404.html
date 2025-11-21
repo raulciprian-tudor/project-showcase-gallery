@@ -1,1 +1,17 @@
-<p>wildcard-404 works!</p>
+<div class="not-found-container bg-primary">
+  <div class="content-wrapper text-center">
+    <h1 class="error-code text-primary">404</h1>
+    <h2 class="error-title text-xxl font-semibold text-primary mb-md">Page Not Found</h2>
+    <p class="error-message text-base text-secondary leading-relaxed mb-xl">
+      Oops! The page you're looking for doesn't exist. It might have been moved or deleted.
+    </p>
+    <div class="actions-wrapper">
+      <button mat-flat-button color="primary" class="action-btn" (click)="goHome()">Home</button>
+      <button mat-stroked-button class="action-btn" (click)="goBack()">Go Back</button>
+    </div>
+  </div>
+
+  <div class="illustration">
+    <mat-icon class="large-icon">search_off</mat-icon>
+  </div>
+</div>

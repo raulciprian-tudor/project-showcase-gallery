@@ -1,20 +1,10 @@
-@import '../../../styles.scss';
+@use '../../../styles.scss' as *;
 
 .projects-container {
   min-height: 100vh;
-  background-color: $dark-bg-primary;
-  padding: $spacing-xl $spacing-md;
 }
 
-h1 {
-  font-family: $font-family-heading;
-  font-size: $font-size-xxxl;
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  letter-spacing: $letter-spacing-tight;
-  color: $dark-text-primary;
-  text-align: center;
-  margin: 0 0 $spacing-xl 0;
+.text-uppercase {
   text-transform: uppercase;
 }
 
@@ -22,41 +12,41 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto $spacing-lg auto;
+  margin: 0 auto calc($spacing-unit * 3) auto;
   max-width: 1400px;
   width: 100%;
-  gap: $spacing-md;
-  padding: 0 $spacing-md;
+  gap: calc($spacing-unit * 2);
+  padding: 0 calc($spacing-unit * 2);
 }
 
 .search-sort-group {
   display: flex;
   gap: 0;
-  
+
   app-search-bar {
     flex: 1;
-    
+
     ::ng-deep .search-field {
       margin: 0;
-      
+
       .mat-mdc-text-field-wrapper {
         border-radius: 4px 0 0 4px;
       }
-      
+
       .mdc-notched-outline__trailing {
         border-right: none !important;
       }
     }
   }
-  
+
   .sort-field {
     width: 180px;
     margin: 0;
-    
+
     ::ng-deep .mat-mdc-text-field-wrapper {
       border-radius: 0 4px 4px 0;
     }
-    
+
     ::ng-deep .mdc-notched-outline__leading {
       border-left: none !important;
       width: 0 !important;
@@ -64,49 +54,34 @@ h1 {
   }
 }
 
-@media only screen and (max-width: 1200px) {
-  .toolbar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .search-sort-group {
-    width: 100%;
-  }
-}
-
 .view-controls {
-  display: flex;
-
   mat-button-toggle-group {
-    background-color: $dark-bg-secondary;
-    border: 1px solid $dark-border;
+    background-color: $palette-dark;
+    border: 1px solid $palette-medium;
     border-radius: 4px;
   }
 
   mat-button-toggle {
-    color: $dark-text-secondary;
+    color: $palette-light;
 
     &.mat-button-toggle-checked {
-      background-color: $dark-bg-tertiary;
-      color: $dark-accent-primary;
+      background-color: $palette-medium;
+      color: $palette-light;
     }
 
     mat-icon {
-      font-size: $font-size-lg;
-      width: $font-size-lg;
-      height: $font-size-lg;
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 }
 
 // Grid View
-mat-grid-list {
+.grid-view {
   margin: 0 auto;
   max-width: 1400px;
-  padding: 0 $spacing-md;
+  padding: 0 calc($spacing-unit * 2);
 
   mat-grid-tile {
     overflow: visible !important;
@@ -123,10 +98,10 @@ mat-grid-list {
 .list-view {
   margin: 0 auto;
   max-width: 900px;
-  padding: 0 $spacing-md;
+  padding: 0 calc($spacing-unit * 2);
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: calc($spacing-unit * 3);
 
   app-project-card {
     width: 100%;
@@ -134,57 +109,71 @@ mat-grid-list {
   }
 }
 
-@media (max-width: 768px) {
-  .projects-container {
-    padding: $spacing-lg $spacing-sm;
-  }
-
-  h1 {
-    font-size: $font-size-xxl;
-    margin-bottom: $spacing-lg;
-  }
-
-  .view-controls {
-    margin-bottom: $spacing-md;
-  }
-
-  mat-grid-list {
-    padding: 0 $spacing-sm;
-  }
-
-  .list-view {
-    padding: 0 $spacing-sm;
-    gap: $spacing-md;
-  }
-}
-
+// Sort field styling
 .sort-field {
   ::ng-deep {
     .mat-mdc-text-field-wrapper {
-      background-color: $dark-bg-secondary;
+      background-color: $palette-dark;
     }
 
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
-      border-color: $dark-border !important;
+      border-color: $palette-medium !important;
     }
 
     .mat-mdc-form-field.mat-focused {
       .mdc-notched-outline__leading,
       .mdc-notched-outline__notch,
       .mdc-notched-outline__trailing {
-        border-color: $dark-accent-primary !important;
+        border-color: $palette-light !important;
       }
     }
 
     .mdc-floating-label {
-      color: $dark-text-secondary !important;
+      color: $palette-light !important;
     }
 
     .mat-mdc-select-value,
     .mat-mdc-select-arrow {
-      color: $dark-text-primary !important;
+      color: $palette-lightest !important;
     }
+  }
+}
+
+// Responsive
+@media only screen and (max-width: 1200px) {
+  .toolbar-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-sort-group {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-container {
+    padding: calc($spacing-unit * 3) $spacing-unit;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: calc($spacing-unit * 3);
+  }
+
+  .view-controls {
+    margin-bottom: calc($spacing-unit * 2);
+  }
+
+  .grid-view,
+  .list-view {
+    padding: 0 $spacing-unit;
+  }
+
+  .list-view {
+    gap: calc($spacing-unit * 2);
   }
 }
