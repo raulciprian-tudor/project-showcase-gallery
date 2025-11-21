@@ -1,4 +1,4 @@
-@import '../../../styles.scss';
+@use '../../../styles.scss' as *;
 
 .projects-container {
   min-height: 100vh;
@@ -32,31 +32,31 @@ h1 {
 .search-sort-group {
   display: flex;
   gap: 0;
-  
+
   app-search-bar {
     flex: 1;
-    
+
     ::ng-deep .search-field {
       margin: 0;
-      
+
       .mat-mdc-text-field-wrapper {
         border-radius: 4px 0 0 4px;
       }
-      
+
       .mdc-notched-outline__trailing {
         border-right: none !important;
       }
     }
   }
-  
+
   .sort-field {
     width: 180px;
     margin: 0;
-    
+
     ::ng-deep .mat-mdc-text-field-wrapper {
       border-radius: 0 4px 4px 0;
     }
-    
+
     ::ng-deep .mdc-notched-outline__leading {
       border-left: none !important;
       width: 0 !important;
@@ -71,7 +71,7 @@ h1 {
     align-items: center;
     justify-content: center;
   }
-  
+
   .search-sort-group {
     width: 100%;
   }
